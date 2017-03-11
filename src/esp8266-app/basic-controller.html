@@ -1,0 +1,239 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="log-behavior.html">
+
+<dom-module id="basic-controller">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+      .circle {
+        position: relative;
+      	width: 100%;
+      	height: auto;
+        padding-top: 100%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        background-color: #4679BD;
+      }
+      .inner-circle {
+        position: absolute;
+        top: var(--basic-controller-y-axis, 50%);
+        left: 50%;
+        width: 10%;
+        height: 10%;
+        transform: translate(-50%, -50%);
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        background-color: white;
+
+        -webkit-transition: top 2s;
+        transition: top 2s;
+        transition-timing-function: ease-in-out;
+      }
+      .inner-circle:hover {
+        top: 30%;
+      }
+      .arrow-left {
+        position: absolute;
+        top: 50%;
+        left: 5%;
+        transform: translate(0, -50%);
+        width: 20%;
+        height: 0;
+        padding-top: 25%;
+        padding-bottom: 25%;
+        overflow: hidden;
+      }
+      .arrow-left > a {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        margin-top: -500px;
+        border-top: 500px solid transparent;
+        border-bottom: 500px solid transparent;
+        border-right: 500px solid white;
+      }
+      .arrow-left > a:active {
+        border-right: 500px solid var(--paper-blue-grey-100);
+      }
+      .arrow-up {
+        position: absolute;
+        top: 5%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 25%;
+        height: 0;
+        padding-left: 25%;
+        padding-bottom: 20%;
+        overflow: hidden;
+      }
+      .arrow-up > a {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        margin-left: -500px;
+        border-left: 500px solid transparent;
+        border-right: 500px solid transparent;
+        border-bottom: 500px solid white;
+      }
+      .arrow-up > a:active {
+        border-bottom: 500px solid var(--paper-blue-grey-100);
+      }
+      .arrow-right {
+        position: absolute;
+        top: 50%;
+        left: 95%;
+        transform: translate(-50%, -50%);
+        width: 20%;
+        height: 0;
+        padding-top: 25%;
+        padding-bottom: 25%;
+        padding-left: 20%;
+        overflow: hidden;
+      }
+      .arrow-right > a {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        margin-top: -500px;
+        margin-left: -500px;
+        border-top: 500px solid transparent;
+        border-bottom: 500px solid transparent;
+        border-left: 500px solid white;
+      }
+      .arrow-right > a:active {
+        border-left: 500px solid var(--paper-blue-grey-100);
+      }
+      .arrow-down {
+        position: absolute;
+        bottom: 5%;
+        left: 0;
+        transform: translate(50%, 0);
+        width: 25%;
+        height: 0;
+        padding-left: 25%;
+        padding-top: 20%;
+        overflow: hidden;
+      }
+      .arrow-down > a {
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        margin-left: -500px;
+        margin-top: -500px;
+        border-left: 500px solid transparent;
+        border-right: 500px solid transparent;
+        border-top: 500px solid white;
+      }
+      .arrow-down > a:active {
+        border-top: 500px solid var(--paper-blue-grey-100);
+      }
+
+
+
+    </style>
+
+    <div class="circle">
+      <div id="cursor" class="inner-circle"></div>
+      <div class="arrow-left"><a href="#" on-click="_left"></a></div>
+      <div class="arrow-up"><a href="#" on-click="_up"></a></div>
+      <div class="arrow-right"><a href="#" on-click="_right"></a></div>
+      <div class="arrow-down"><a href="#" on-click="_down"></a></div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'basic-controller',
+      behaviors: [
+        AppBehaviors.LogBehavior
+      ],
+      properties: {
+        url: {
+          type: String
+        },
+        _webSocket: {
+          type: Object,
+          value: null
+        },
+        _y: {
+          type: Number,
+          value: 50
+        }
+      },
+      attached: function() {
+        // establish websocket connection
+        //this.url = 'ws://' + window.location.hostname + '/ws';
+        this.url = 'ws://esp8266.local/rc'; // test mode!
+        this._getWebSocket();
+      },
+      _left: function() {
+        console.log("hit left");
+      },
+      _up: function() {
+        console.log("hit up");
+
+        if (this._y > 30) {
+          this._y -= 10;
+        }
+
+        console.log(this.customStyle['--basic-controller-y-axis']);
+
+        this.customStyle['--basic-controller-y-axis'] = this._y + '%';
+        this.updateStyles();
+      },
+      _right: function() {
+        console.log("hit right");
+      },
+      _down: function() {
+        console.log("hit down");
+
+        if (this._y < 70) {
+          this._y += 10;
+        }
+
+        console.log(this.customStyle['--basic-controller-y-axis']);
+
+        this.customStyle['--basic-controller-y-axis'] = this._y + '%';
+        this.updateStyles();
+      },
+      _getWebSocket: function() {
+        if (this._webSocket === null) {
+          this._webSocket = this._createWebSocket();
+        }
+        return this._webSocket;
+      },
+      _createWebSocket: function() {
+        this._log('Trying to establish WebSocket', this.url);
+        var _webSocket = new WebSocket(this.url);
+        var _this = this;
+        _webSocket.onopen = function(event) {
+          _this._log('WebSocket established', event);
+        };
+        _webSocket.onmessage = function(event) {
+          var json = JSON.parse(event.data);
+          _this._log('Received', json);
+        };
+        _webSocket.onerror = function(event) {
+          _this._log('WebSocket error', event);
+        };
+
+        return _webSocket;
+      }
+    });
+  </script>
+</dom-module>

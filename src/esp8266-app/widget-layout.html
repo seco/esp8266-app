@@ -1,0 +1,101 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="log-behavior.html">
+
+<dom-module id="widget-layout">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: inline-block;
+      }
+      .widget-header {
+        padding: 10px;
+        background-color: white;
+        border: 1px solid #dedede;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        font-size: 1em;
+        color: var(--paper-blue-grey-700);
+        font-weight: normal;
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        width: 100%;
+      }
+      .container {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        width: 100%;
+      }
+      .widget-body {
+        padding: 10px;
+        border: 1px solid var(--paper-grey-100);
+        border-top: none;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        @apply(--shadow-elevation-2dp);
+        height: 100%;
+      }
+      .spacer {
+        @apply(--layout-flex);
+        width: 100%;
+      }
+    </style>
+    <div>
+      <button class="widget-header" on-tap="toggle">
+        <div class="container">
+          <span>[[title]]</span>
+          <span class="spacer"></span>
+          <!-- insertion point for elements with class attribute 'widget-label' -->
+          <content select=".widget-label"></content>
+        </div>
+      </button>
+      <iron-collapse id="collapse_id" tabindex="[[tabindex]]" opened="{{opened}}">
+        <div class="widget-body">
+          <!-- insertion point for any element -->
+          <content></content>
+        </div>
+      </iron-collapse>
+      <app-localstorage-document key="{{id}}" data="{{opened}}" log$={{verbose}}></app-localstorage-document>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'widget-layout',
+      behaviors: [
+        AppBehaviors.LogBehavior
+      ],
+      properties: {
+        title: {
+          type: String,
+          value: null
+        }
+      },
+      /**
+       * is true if widget is collapsed
+       */
+      isCollapsed: function() {
+        return !this.$.collapse_id.opened;
+      },
+      /**
+       * collapse widget more or less
+       */
+      collapse: function(collapse) {
+        this.$.collapse_id.opened = !collapse;
+      },
+      /**
+       * toggle between expand widget more or less
+       */
+      toggle: function() {
+        this.$.collapse_id.toggle();
+        this.fire('toggle', this.isCollapsed());
+      }
+    });
+  </script>
+</dom-module>

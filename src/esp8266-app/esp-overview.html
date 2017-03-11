@@ -1,0 +1,79 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
+
+<link rel="import" href="log-behavior.html">
+
+<dom-module id="esp-overview">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+      table {
+        width: 100%;
+      }
+      th {
+        text-align: left;
+      }
+      tr:nth-child(odd) td{
+        background-color: var(--paper-grey-100);
+      }
+      tr:nth-child(even) td{
+        background-color: var(--paper-grey-200);
+      }
+    </style>
+    <table>
+      <tr><th>Parameter</th><th>Value</th></tr>
+      <template is="dom-repeat" items="{{details}}">
+        <tr><td>{{item.key}}</td><td>{{item.value}}</td></tr>
+      </template>
+    </table>
+    <iron-ajax
+      auto
+      url="[[url]]/esp"
+      handle-as="json"
+      method="GET"
+      on-response="_setData"
+      debounce-duration="300"
+      timeout="1000">
+    </iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'esp-overview',
+      behaviors: [
+        AppBehaviors.LogBehavior
+      ],
+      properties: {
+        url: {
+          type: String
+        },
+        details: {
+          type: Object,
+          notify: true
+        },
+      },
+      attached: function() {
+        this.url = window.location.origin;
+        this._log("URL is ", this.url);
+      },
+      _setData: function(event) {
+        if (event) {
+          var response = event.detail.response;
+          // map response object to an array of key value pairs
+          var i = 0;
+          var mapping = [];
+          for (var name in response) {
+            mapping[i] = {key: name, value: response[name]};
+            i++;
+          }
+          this.details = mapping;
+        }
+      }
+    });
+  </script>
+</dom-module>

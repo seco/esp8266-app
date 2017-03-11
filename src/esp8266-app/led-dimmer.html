@@ -1,0 +1,98 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
+
+<link rel="import" href="log-behavior.html">
+
+<dom-module id="led-dimmer">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+      .container {
+        @apply(--layout-horizontal);
+        width: 100%;
+      }
+      paper-slider {
+        width: 100%;
+      }
+      iron-icon {
+        --iron-icon-height: 10vh;
+        --iron-icon-width: 10vw;
+      }
+    </style>
+    <div class="container">
+      <iron-icon icon="icons:lightbulb-outline"></iron-icon>
+      <paper-slider min="0" max="1024" value="[[brightness]]" immediate-value="{{brightness}}" on-change="_brightnessChanged" on-immediate-value-change="_brightnessChanged"></paper-slider>
+    <div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'led-dimmer',
+      behaviors: [
+        AppBehaviors.LogBehavior
+      ],
+      properties: {
+        brightness: {
+          type: Number,
+          notify: true
+        },
+        url: {
+          type: String
+        },
+        _webSocket: {
+          type: Object,
+          value: null
+        }
+      },
+      attached: function() {
+        // establish websocket connection
+        //this.url = 'ws://' + window.location.hostname + '/ws';
+        this.url = 'ws://esp8266.local/led'; // test mode!
+        this._getWebSocket();
+      },
+      _setBrightness: function(json) {
+        this.brightness = json.brightness;
+      },
+      _brightnessChanged: function() {
+        // emit changes
+        if (this._getWebSocket() != null) {
+          var brightness = {
+            brightness: this.brightness
+          };
+          this._log('Send', brightness);
+          this._getWebSocket().send(JSON.stringify(brightness));
+        }
+      },
+      _getWebSocket: function() {
+        if (this._webSocket === null) {
+          this._webSocket = this._createWebSocket();
+        }
+        return this._webSocket;
+      },
+      _createWebSocket: function() {
+        this._log('Trying to establish WebSocket', this.url);
+        var _webSocket = new WebSocket(this.url);
+        var _this = this;
+        _webSocket.onopen = function(event) {
+          _this._log('WebSocket established', event);
+        };
+        _webSocket.onmessage = function(event) {
+          var json = JSON.parse(event.data);
+          _this._log('Received', json);
+          _this._setBrightness(json);
+        };
+        _webSocket.onerror = function(event) {
+          _this._log('WebSocket error', event);
+        };
+
+        return _webSocket;
+      }
+    });
+  </script>
+</dom-module>

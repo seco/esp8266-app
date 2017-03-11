@@ -1,0 +1,6 @@
+{
+  "name": "esp8266-app",
+  "short_name": "esp8266-app",
+  "start_url": "/",
+  "display": "standalone"
+}

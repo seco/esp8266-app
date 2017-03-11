@@ -1,0 +1,87 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="log-behavior.html">
+
+<dom-module id="led-toggle">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+      .container {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        width: 100%;
+      }
+      iron-icon {
+        --iron-icon-height: 10vh;
+        --iron-icon-width: 10vw;
+      }
+    </style>
+    <div class="container">
+      [[checked]]
+      <iron-icon class="widget-iron-icon" icon="icons:lightbulb-outline"></iron-icon>
+      <paper-toggle-button checked="{{toggle}}" on-change="_setToggle"></paper-toggle-button>
+    </div>
+
+    <!--iron-ajax
+      id="ajax"
+      auto
+      url="[[url]]/led"
+      handle-as="json"
+      method="GET"
+      params="id=101"
+      on-response="_getToggle"
+      debounce-duration="300"
+      timeout="1000">
+    </iron-ajax-->
+  </template>
+
+  <script>
+    Polymer({
+      is: 'led-toggle',
+      behaviors: [
+        AppBehaviors.LogBehavior
+      ],
+      properties: {
+        url: {
+          type: String
+        },
+        toggle: {
+          type: Boolean,
+          value: false,
+          notify: true
+        }
+      },
+      attached: function() {
+        this.url = window.location.origin;
+        this._log("URL is ", this.url);
+      },
+      _getToggle: function(event) {
+        if (event.detail.response) {
+          this.toggle = event.detail.response.toggle;
+        } else {
+          console.log(">>> no data");
+        }
+      },
+      _setToggle: function(event) {
+        console.log(this.toggle);
+
+        body = {
+          toggle: this.toggle
+        };
+
+        this.$.ajax.method = "POST";
+        this.$.ajax.params = "id=" + 101;
+        this.$.ajax.body = JSON.stringify(body);
+        this.$.ajax.generateRequest();
+      }
+    });
+  </script>
+</dom-module>
