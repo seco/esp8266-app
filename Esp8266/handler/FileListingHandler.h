@@ -24,7 +24,7 @@ class FileListingHandler {
         JsonObject& entry = files.createNestedObject();
         entry[F("name")] = name;
         entry[F("size")] = size;
-        DEBUG_MSG("File: name=%s, size=%s", name.c_str(), size.c_str());
+        Serial.printf("File: name=%s, size=%s", name.c_str(), size.c_str());
       }
       response->setLength();
       request->send(response);

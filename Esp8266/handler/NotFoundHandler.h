@@ -26,7 +26,7 @@ class NotFoundHandler {
         method = F("HEAD");
       else if (request->method() == HTTP_OPTIONS)
         method = F("OPTIONS");
-      DEBUG_MSG("HTTP 404 : http://%s%s \n", request->host().c_str(), request->url().c_str());
+      Serial.printf("HTTP 404 : http://%s%s \n", request->host().c_str(), request->url().c_str());
 
       request->send(404, F("Page not found."));
     }

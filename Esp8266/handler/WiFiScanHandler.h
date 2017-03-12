@@ -17,11 +17,11 @@ class WiFiScanHandler {
       }
       // WiFi scan not finished = -1;
       if (WiFi.scanComplete() == -1) {
-        DEBUG_MSG("Scanning WiFi network ");
+        Serial.print(F("Scanning WiFi network "));
       }
       int i = 10;
       while (WiFi.scanComplete() == -1 && i > 0) {
-        DEBUG_MSG(".");
+        Serial.print(".");
         delay(100);
         i--;
       }
