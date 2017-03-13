@@ -1,5 +1,4 @@
-#ifndef FILE_LISTING_HANDLER_H
-#define FILE_LISTING_HANDLER_H
+#pragma once
 
 #include <FS.h>
 
@@ -43,5 +42,3 @@ class FileListingHandler {
       }
     }
 };
-
-#endif

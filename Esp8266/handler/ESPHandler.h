@@ -1,5 +1,4 @@
-#ifndef ESP_HANDLER_H
-#define ESP_HANDLER_H
+#pragma once
 
 #ifdef ESP8266
 extern "C" {
@@ -49,5 +48,3 @@ class ESPHandler {
       request->send(response);
     }
 };
-
-#endif

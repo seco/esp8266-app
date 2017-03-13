@@ -20,6 +20,7 @@
 <link rel="import" href="../../bower_components/platinum-sw/platinum-sw-elements.html">
 
 <link rel="import" href="basic-controller.html">
+<link rel="import" href="dc-control.html">
 <link rel="import" href="esp-overview.html">
 <link rel="import" href="led-dimmer.html">
 <link rel="import" href="led-toggle.html">
@@ -123,21 +124,28 @@
             <esp-overview></esp-overview>
           </widget-layout>
 
-          <widget-layout id="widget_led_toggle_id" title="LED toggle">
+          <!--widget-layout id="widget_led_toggle_id" title="LED toggle">
             <span class="widget-label">
               <iron-icon icon="icons:lightbulb-outline"></iron-icon>
               [[_toString(toggle)]]
             </span>
             <led-toggle toggle="{{toggle}}"></led-toggle>
+          </widget-layout-->
+
+          <widget-layout id="widget_dc_control_id" title="DC control">
+            <span class="widget-label">
+              <iron-icon icon="hardware:toys"></iron-icon>
+            </span>
+            <dc-control></dc-control>
           </widget-layout>
 
-          <widget-layout id="widget_led_dimmer_id" title="LED dimmer">
+          <!--widget-layout id="widget_led_dimmer_id" title="LED dimmer">
             <span class="widget-label">
               <iron-icon icon="icons:lightbulb-outline"></iron-icon>
               [[brightness]]
             </span>
             <led-dimmer brightness="{{brightness}}"></led-dimmer>
-          </widget-layout>
+          </widget-layout-->
 
           <widget-layout id="widget_basic_controller_id" title="Basic Controller">
             <span class="widget-label">

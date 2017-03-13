@@ -1,5 +1,4 @@
-#ifndef NOT_FOUND_HANDLER_H
-#define NOT_FOUND_HANDLER_H
+#pragma once
 
 #include <ESPAsyncTCP.h> // https://github.com/me-no-dev/ESPAsyncTCP/blob/master/src/ESPAsyncTCP.h
 #include <ESPAsyncWebServer.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/ESPAsyncWebServer.h
@@ -31,5 +30,3 @@ class NotFoundHandler {
       request->send(404, F("Page not found."));
     }
 };
-
-#endif

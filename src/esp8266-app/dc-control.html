@@ -52,8 +52,8 @@
       },
       attached: function() {
         // establish websocket connection
-        //this.url = 'ws://' + window.location.hostname + '/ws';
-        this.url = 'ws://esp8266.local/rc'; // test mode!
+        //this.url = 'ws://' + window.location.hostname + '/dc';
+        this.url = 'ws://esp8266.local/dc'; // test mode!
         this._getWebSocket();
       },
       _setSpeed: function(json) {

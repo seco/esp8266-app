@@ -16,8 +16,13 @@ class WebService : public Service {
 	public:
 		WebService(bool enabled, bool verbose);
 
+    static void onDCEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
+    static void sendInitEvent(AsyncWebSocket *server, AsyncWebSocketClient *client);
+    static bool processEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, const String& message);
+
   private:
     AsyncWebServer webServer;
+    AsyncWebSocket dc;
 
     ESPHandler espHandler;
     FileListingHandler fileListingHandler;

@@ -1,5 +1,4 @@
-#ifndef WIFI_SCAN_HANDLER_H
-#define WIFI_SCAN_HANDLER_H
+#pragma once
 
 #include <ESPAsyncTCP.h> // https://github.com/me-no-dev/ESPAsyncTCP/blob/master/src/ESPAsyncTCP.h
 #include <ESPAsyncWebServer.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/ESPAsyncWebServer.h
@@ -71,5 +70,3 @@ class WiFiScanHandler {
       }*/
     }
 };
-
-#endif
