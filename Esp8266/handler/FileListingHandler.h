@@ -2,15 +2,13 @@
 
 #include <FS.h>
 
-#include <ESPAsyncTCP.h> // https://github.com/me-no-dev/ESPAsyncTCP/blob/master/src/ESPAsyncTCP.h
-#include <ESPAsyncWebServer.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/ESPAsyncWebServer.h
 #include <AsyncJson.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/AsyncJson.h
 
 class FileListingHandler {
   public :
     FileListingHandler(){};
 
-    void classRequest (AsyncWebServerRequest *request) {
+    void classRequest(AsyncWebServerRequest *request) {
 
       AsyncJsonResponse *response = new AsyncJsonResponse();
       JsonObject& json = response->getRoot();

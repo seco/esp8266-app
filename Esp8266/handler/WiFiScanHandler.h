@@ -1,14 +1,12 @@
 #pragma once
 
-#include <ESPAsyncTCP.h> // https://github.com/me-no-dev/ESPAsyncTCP/blob/master/src/ESPAsyncTCP.h
-#include <ESPAsyncWebServer.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/ESPAsyncWebServer.h
 #include <AsyncJson.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/AsyncJson.h
 
 class WiFiScanHandler {
   public :
     WiFiScanHandler(){};
 
-    void classRequest (AsyncWebServerRequest *request) {
+    void classRequest(AsyncWebServerRequest *request) {
 
       // WiFi scan isn't triggered = -2; https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/ESP8266WiFiScan.cpp
       if (WiFi.scanComplete() == -2) {

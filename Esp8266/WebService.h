@@ -6,6 +6,8 @@
 
 #include "Service.h"
 
+#include "handler/WSHandler.h"
+
 #include "handler/ESPHandler.h"
 #include "handler/FileListingHandler.h"
 #include "handler/NotFoundHandler.h"
@@ -24,6 +26,7 @@ class WebService : public Service {
     AsyncWebServer webServer;
     AsyncWebSocket dc;
 
+    WSHandler wsHandler;
     ESPHandler espHandler;
     FileListingHandler fileListingHandler;
     NotFoundHandler notFoundHandler;

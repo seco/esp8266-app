@@ -7,6 +7,7 @@ L298NMotorDriver::L298NMotorDriver(bool enabled, bool verbose, unsigned int pinP
 	_pinInput2 = pinInput2;
 	_currentSpeed = 0;
 
+	analogWriteRange(100); // CHANGE PWM RANGE from 1023 to 100
 	pinMode(_pinPWM, OUTPUT);
 	pinMode(_pinInput1, OUTPUT);
 	pinMode(_pinInput2, OUTPUT);

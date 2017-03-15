@@ -26,7 +26,7 @@ void Esp8266::run() {
   if ((previousTime + updateInterval) < millis()) {
     previousTime = millis();
 
-    Serial.println(F("do something ..."));
+    Serial.println(F("do something else ..."));
 
   }
 }

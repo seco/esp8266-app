@@ -6,15 +6,13 @@ extern "C" {
 }
 #endif
 
-#include <ESPAsyncTCP.h> // https://github.com/me-no-dev/ESPAsyncTCP/blob/master/src/ESPAsyncTCP.h
-#include <ESPAsyncWebServer.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/ESPAsyncWebServer.h
 #include <AsyncJson.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/AsyncJson.h
 
 class ESPHandler {
   public :
     ESPHandler(){};
 
-    void classRequest (AsyncWebServerRequest *request) {
+    void classRequest(AsyncWebServerRequest *request) {
 
       // return data from https://github.com/esp8266/Arduino/blob/master/cores/esp8266/Esp.h
       AsyncJsonResponse *response = new AsyncJsonResponse();

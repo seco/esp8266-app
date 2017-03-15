@@ -39,6 +39,13 @@ bool WiFiService::reset() {
      Serial.println(F("WiFi reset done."));
   }
 
+
+  //WiFi.setOutputPower(wifiOutputPower);
+  //WiFi.setPhyMode(WIFI_PHY_MODE_11B);
+  //WiFi.setSleepMode(WIFI_NONE_SLEEP);
+  //WiFi.disconnect(true);
+
+
   return true; // TODO
 }
 
