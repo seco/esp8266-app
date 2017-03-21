@@ -17,7 +17,8 @@
     "paper-slider": "PolymerElements/paper-slider#latest",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#latest",
     "platinum-sw": "PolymerElements/platinum-sw#latest",
-    "neon-animation": "PolymerElements/neon-animation#latest"
+    "neon-animation": "PolymerElements/neon-animation#latest",
+    "device-orientation": "abdonrd/device-orientation#latest"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0",

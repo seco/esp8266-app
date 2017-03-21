@@ -7,10 +7,12 @@ L298NMotorDriver::L298NMotorDriver(bool enabled, bool verbose, unsigned int pinP
 	_pinInput2 = pinInput2;
 	_currentSpeed = 0;
 
-	analogWriteRange(100); // CHANGE PWM RANGE from 1023 to 100
+	analogWriteRange(255); // change PWM range from 1023 to 255
 	pinMode(_pinPWM, OUTPUT);
 	pinMode(_pinInput1, OUTPUT);
 	pinMode(_pinInput2, OUTPUT);
+
+	Serial.print(F("MOTOR SETUP DONE."));
 }
 
 int L298NMotorDriver::getSpeed() const {

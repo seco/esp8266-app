@@ -1,8 +1,6 @@
 #include "Esp8266.h"
 
 Esp8266::Esp8266() :
-  leftMotor(true, VERBOSE, PIN_L298N_ENB, PIN_L298N_IN3, PIN_L298N_IN4),
-  rightMotor(true, VERBOSE, PIN_L298N_ENA, PIN_L298N_IN1, PIN_L298N_IN2),
   wiFiService(true, VERBOSE),
   webService(true, VERBOSE) {
 
@@ -27,6 +25,6 @@ void Esp8266::run() {
     previousTime = millis();
 
     Serial.println(F("do something else ..."));
-
+    
   }
 }

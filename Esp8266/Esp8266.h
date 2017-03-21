@@ -5,7 +5,6 @@
 #include <FS.h> // https://github.com/esp8266/Arduino/tree/master/cores/esp8266/FS.h
 
 #include "Configuration.h"
-#include "L298NMotorDriver.h"
 #include "WiFiService.h"
 #include "WebService.h"
 
@@ -17,9 +16,6 @@ class Esp8266 {
 		void run();
 
 	private:
-
-    L298NMotorDriver leftMotor;
-    L298NMotorDriver rightMotor;
 
     WiFiService wiFiService;
 

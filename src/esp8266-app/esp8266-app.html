@@ -19,8 +19,9 @@
 
 <link rel="import" href="../../bower_components/platinum-sw/platinum-sw-elements.html">
 
-<link rel="import" href="basic-controller.html">
-<link rel="import" href="dc-control.html">
+<link rel="import" href="basic-controller1.html">
+<link rel="import" href="basic-controller2.html">
+<link rel="import" href="motor-control.html">
 <link rel="import" href="esp-overview.html">
 <link rel="import" href="led-dimmer.html">
 <link rel="import" href="led-toggle.html">
@@ -132,11 +133,11 @@
             <led-toggle toggle="{{toggle}}"></led-toggle>
           </widget-layout-->
 
-          <widget-layout id="widget_dc_control_id" title="DC control">
+          <widget-layout id="widget_motor_control_id" title="Motor control">
             <span class="widget-label">
               <iron-icon icon="hardware:toys"></iron-icon>
             </span>
-            <dc-control></dc-control>
+            <motor-control></motor-control>
           </widget-layout>
 
           <!--widget-layout id="widget_led_dimmer_id" title="LED dimmer">
@@ -147,11 +148,18 @@
             <led-dimmer brightness="{{brightness}}"></led-dimmer>
           </widget-layout-->
 
-          <widget-layout id="widget_basic_controller_id" title="Basic Controller">
+          <widget-layout id="widget_basic_controller1_id" title="Basic Controller 1">
             <span class="widget-label">
               <iron-icon icon="hardware:device-hub"></iron-icon>
             </span>
-            <basic-controller></basic-controller>
+            <basic-controller1></basic-controller1>
+          </widget-layout>
+
+          <widget-layout id="widget_basic_controller2_id" title="Basic Controller 2">
+            <span class="widget-label">
+              <iron-icon icon="hardware:device-hub"></iron-icon>
+            </span>
+            <basic-controller2></basic-controller2>
           </widget-layout>
 
           <!--widget-layout id="widget_motion_controller_id" title="Motion controller">

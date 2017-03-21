@@ -10,7 +10,7 @@ extern "C" {
 
 class ESPHandler {
   public :
-    ESPHandler(){};
+    ESPHandler() {};
 
     void classRequest(AsyncWebServerRequest *request) {
 

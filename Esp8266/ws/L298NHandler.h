@@ -3,9 +3,20 @@
 #include <AsyncWebSocket.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/AsyncWebSocket.h
 #include <AsyncJson.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/AsyncJson.h
 
-class WSHandler {
+#include "../L298NMotorDriver.h"
+
+class L298NHandler {
   public :
-    WSHandler(){};
+
+    L298NMotorDriver *motor;
+
+    L298NHandler(bool enabled, bool verbose, unsigned int pinPWM, unsigned int pinInput1, unsigned int pinInput2) {
+
+      motor = new L298NMotorDriver(enabled, verbose, pinPWM, pinInput1, pinInput2);
+      motor->setSpeed(0);
+
+      Serial.printf("WS SETUP DONE: SPEED IS %s", motor->getSpeed());
+    };
 
     void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
 
@@ -78,6 +89,8 @@ class WSHandler {
 
       int speed = json["speed"];
       Serial.printf("Speed is %d\n", speed);
+
+      motor->setSpeed(speed);
 
       return true;
     }

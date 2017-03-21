@@ -4,7 +4,7 @@
 
 class WiFiScanHandler {
   public :
-    WiFiScanHandler(){};
+    WiFiScanHandler() {};
 
     void classRequest(AsyncWebServerRequest *request) {
 

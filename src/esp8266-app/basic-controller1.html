@@ -1,0 +1,89 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../../bower_components/device-orientation/device-orientation.html">
+
+<link rel="import" href="remote-control.html">
+
+<dom-module id="basic-controller1">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+      remote-control {
+        width: 100%;
+        height: 100%;
+      }
+
+    </style>
+
+
+    <remote-control id="control_id"></remote-control>
+
+    <device-orientation orientation="{{orientation}}"></device-orientation>
+    <ul>
+      <li>Alpha: [[orientation.alpha]]</li>
+      <li>Beta: [[orientation.beta]]</li>
+      <li>Gamma: [[orientation.gamma]]</li>
+    </ul>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'basic-controller1',
+      properties: {
+        url: {
+          type: String
+        },
+        _webSocket: {
+          type: Object,
+          value: null
+        },
+        orientation: {
+          type: Object,
+          observer: '_orientationChanged'
+        }
+      },
+      attached: function() {
+        // establish websocket connection
+        this.url = 'ws://' + window.location.hostname + '/L298N';
+        //this.url = 'ws://esp8266.local/L298N'; // test mode!
+        //this._getWebSocket();
+      },
+      _orientationChanged: function() {
+
+        this.$.control_id.setDegree(this.orientation.alpha);
+
+      },
+      _getWebSocket: function() {
+        if (this._webSocket === null) {
+          this._webSocket = this._createWebSocket();
+        }
+        return this._webSocket;
+      },
+      _createWebSocket: function() {
+        this._log('Trying to establish WebSocket', this.url);
+        var _webSocket = new WebSocket(this.url);
+        var _this = this;
+        _webSocket.onopen = function(event) {
+          _this._log('WebSocket established', event);
+        };
+        _webSocket.onmessage = function(event) {
+          var json = JSON.parse(event.data);
+          _this._log('Received', json);
+        };
+        _webSocket.onerror = function(event) {
+          _this._log('WebSocket error', event);
+        };
+
+        return _webSocket;
+      }
+    });
+  </script>
+</dom-module>

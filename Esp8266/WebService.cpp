@@ -2,11 +2,13 @@
 
 WebService::WebService(bool enabled, bool verbose) :
   webServer(80),
-  dc("/dc"),
+  l298nWS("/L298N"),
+  l298nHandler(true, VERBOSE, PIN_L298N_ENA, PIN_L298N_IN1, PIN_L298N_IN2),
   Service(enabled, verbose) {
 
-  dc.onEvent(std::bind(&WSHandler::onEvent, wsHandler, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
-  webServer.addHandler(&dc);
+  // handle web sockets
+  l298nWS.onEvent(std::bind(&L298NHandler::onEvent, l298nHandler, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
+  webServer.addHandler(&l298nWS);
 
   // rewrite root to default index file
   webServer.rewrite("/", DEFAULT_INDEX);

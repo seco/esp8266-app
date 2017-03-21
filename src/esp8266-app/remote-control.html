@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="remote-control">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .container {
+        position: relative;
+      	width: 100%;
+      	height: auto;
+        padding-top: 100%;
+      }
+      .control {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 50%;
+        border: 30px solid var(--paper-grey-300);
+        border-top: 30px solid var(--paper-blue-500);
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        text-align: center;
+      }
+      .control > span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      }
+
+
+    </style>
+
+    <div class="container">
+      <div id="control_id" class="control" on-click="_rotate">
+        <span>[[degree]]</span>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'remote-control',
+      properties: {
+        degree: {
+          type: Number,
+          value: 0
+        },
+        step: {
+          type: Number,
+          value: 15
+        }
+      },
+      listeners: {
+        '_rotate': '_rotate'
+      },
+      _rotate: function() {
+        console.log("rotate :: " + this.degree);
+
+        if (this.degree < 360) {
+          this.degree += 15;
+        } else {
+          this.degree = 0;
+        }
+
+        this.setDegree(this.degree);
+      },
+      setDegree: function(degree) {
+
+        degree = Math.round(degree);
+
+        if (degree % this.step == 0) {
+          this.degree = degree;
+        }
+
+        this.transform('rotate(' + this.degree + 'deg)', this.$.control_id);
+      }
+    });
+  </script>
+</dom-module>

@@ -5,9 +5,7 @@
 
 <link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 
-<link rel="import" href="log-behavior.html">
-
-<dom-module id="dc-control">
+<dom-module id="motor-control">
   <template strip-whitespace>
     <style>
       :host {
@@ -19,28 +17,48 @@
       }
       paper-slider {
         width: 100%;
+        --paper-slider-container-color: var(--paper-red-500);
+        --paper-slider-secondary-color: var(--paper-green-500);
+        --paper-slider-active-color: transparent;
+        --paper-slider-knob-color: var(--paper-blue-900);
+        --paper-slider-pin-color: var(--paper-blue-900);
+        --paper-slider-knob-start-color: var(--paper-blue-900);
+        --paper-slider-knob-start-border-color: var(--paper-blue-900);
+        --paper-slider-pin-start-color: var(--paper-blue-900);
+        --paper-slider-height: 4px;
       }
       iron-icon {
         --iron-icon-height: 10vh;
         --iron-icon-width: 10vw;
+        animation-name: windmill;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-duration: var(--duration, 0s);
+        animation-direction: var(--direction, normal);
+      }
+      @keyframes windmill {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
       }
     </style>
     <div class="container">
-      <iron-icon icon="hardware:toys"></iron-icon>
-      <paper-slider min="0" max="1024" value="[[speed]]" immediate-value="{{speed}}" on-change="_speedChanged" on-immediate-value-change="_speedChanged"></paper-slider>
+      <iron-icon id="icon_id" icon="hardware:toys"></iron-icon>
+      <paper-slider min="-255" max="255" pin immediate-value="{{speed}}"></paper-slider>
     <div>
   </template>
 
   <script>
     Polymer({
-      is: 'dc-control',
-      behaviors: [
-        AppBehaviors.LogBehavior
-      ],
+      is: 'motor-control',
       properties: {
         speed: {
           type: Number,
-          notify: true
+          value: 0,
+          observer: '_speedChanged'
         },
         url: {
           type: String
@@ -52,22 +70,36 @@
       },
       attached: function() {
         // establish websocket connection
-        //this.url = 'ws://' + window.location.hostname + '/dc';
-        this.url = 'ws://esp8266.local/dc'; // test mode!
+        this.url = 'ws://' + window.location.hostname + '/L298N';
+        //this.url = 'ws://esp8266.local/L298N'; // test mode!
         this._getWebSocket();
       },
       _setSpeed: function(json) {
         this.speed = json.speed;
       },
       _speedChanged: function() {
+
         // emit changes
         if (this._getWebSocket() != null) {
           var speed = {
             speed: this.speed
           };
-          this._log('Send', speed);
+          console.info('Send', speed);
           this._getWebSocket().send(JSON.stringify(speed));
         }
+        // adapt animation preferences
+        var duration = this.speed;
+        var direction = 'normal';
+        if (duration < 0) {
+          duration = duration * -1;
+          direction = 'reverse';
+        }
+        // re-calculate animation duration
+        duration = Math.round(500 / duration) / 10;
+        // update animation styles
+        this.customStyle['--duration'] = duration + 's';
+        this.customStyle['--direction'] = direction;
+        this.updateStyles();
       },
       _getWebSocket: function() {
         if (this._webSocket === null) {
@@ -80,15 +112,16 @@
         var _webSocket = new WebSocket(this.url);
         var _this = this;
         _webSocket.onopen = function(event) {
-          _this._log('WebSocket established', event);
+          console.log('WebSocket established', event);
+          // TODO get current value
         };
         _webSocket.onmessage = function(event) {
           var json = JSON.parse(event.data);
-          _this._log('Received', json);
+          console.log('Received', json);
           _this._setSpeed(json);
         };
         _webSocket.onerror = function(event) {
-          _this._log('WebSocket error', event);
+          console.log('WebSocket error', event);
         };
 
         return _webSocket;

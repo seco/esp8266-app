@@ -33,7 +33,7 @@
     </table>
     <iron-ajax
       auto
-      url="[[url]]/esp"
+      url="[[url]]"
       handle-as="json"
       method="GET"
       on-response="_setData"
@@ -58,7 +58,7 @@
         },
       },
       attached: function() {
-        this.url = window.location.origin;
+        this.url = window.location.origin + "/esp";
         this._log("URL is ", this.url);
       },
       _setData: function(event) {

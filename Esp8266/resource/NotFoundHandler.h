@@ -2,7 +2,7 @@
 
 class NotFoundHandler {
   public :
-    NotFoundHandler(){};
+    NotFoundHandler() {};
 
     void classRequest(AsyncWebServerRequest *request) {
 

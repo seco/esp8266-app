@@ -6,27 +6,25 @@
 
 #include "Service.h"
 
-#include "handler/WSHandler.h"
 
-#include "handler/ESPHandler.h"
-#include "handler/FileListingHandler.h"
-#include "handler/NotFoundHandler.h"
-#include "handler/WiFiScanHandler.h"
+#include "ws/L298NHandler.h"
+
+#include "resource/ESPHandler.h"
+#include "resource/FileListingHandler.h"
+#include "resource/NotFoundHandler.h"
+#include "resource/WiFiScanHandler.h"
 
 class WebService : public Service {
 
 	public:
 		WebService(bool enabled, bool verbose);
 
-    static void onDCEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
-    static void sendInitEvent(AsyncWebSocket *server, AsyncWebSocketClient *client);
-    static bool processEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, const String& message);
-
   private:
     AsyncWebServer webServer;
-    AsyncWebSocket dc;
+    AsyncWebSocket l298nWS;
 
-    WSHandler wsHandler;
+    L298NHandler l298nHandler;
+    
     ESPHandler espHandler;
     FileListingHandler fileListingHandler;
     NotFoundHandler notFoundHandler;
