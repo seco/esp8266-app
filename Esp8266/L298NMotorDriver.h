@@ -5,7 +5,7 @@
 class L298NMotorDriver : public MotorDriver {
 
 	public:
-		L298NMotorDriver(bool enabled, bool verbose, unsigned int pinPWM, unsigned int pinInput1, unsigned int pinInput2);
+		L298NMotorDriver(bool enabled, unsigned int pinPWM, unsigned int pinInput1, unsigned int pinInput2);
 
 		int getSpeed() const;
 

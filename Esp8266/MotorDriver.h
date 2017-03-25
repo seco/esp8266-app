@@ -6,7 +6,7 @@ class MotorDriver : public Driver {
 
 	public:
 
-		MotorDriver(bool enabled, bool verbose) : Driver(enabled, verbose) {
+		MotorDriver(bool enabled) : Driver(enabled) {
 		}
 
 		// returns current motor speed

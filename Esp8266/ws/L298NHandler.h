@@ -6,92 +6,100 @@
 #include "../L298NMotorDriver.h"
 
 class L298NHandler {
-  public :
+  public:
 
     L298NMotorDriver *motor;
 
-    L298NHandler(bool enabled, bool verbose, unsigned int pinPWM, unsigned int pinInput1, unsigned int pinInput2) {
+    L298NHandler(bool enabled, unsigned int pinPWM, unsigned int pinInput1, unsigned int pinInput2) {
 
-      motor = new L298NMotorDriver(enabled, verbose, pinPWM, pinInput1, pinInput2);
+      motor = new L298NMotorDriver(enabled, pinPWM, pinInput1, pinInput2);
       motor->setSpeed(0);
-
-      Serial.printf("WS SETUP DONE: SPEED IS %s", motor->getSpeed());
     };
 
-    void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+    void onEvent(AsyncWebSocket *ws, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
 
       AwsFrameInfo *info = (AwsFrameInfo*)arg;
       switch (type) {
         case WS_EVT_CONNECT:
-          Serial.printf("ws[%s][%u] connected\n", server->url(), client->id());
-          sendInitEvent(server, client);
+          Log.verbose(F("ws[%s][%u] connected" CR), ws->url(), client->id());
+          notify(ws, client, "connect", false);
           break;
         case WS_EVT_DISCONNECT:
-          Serial.printf("ws[%s][%u] disconnected: %u\n", server->url(), client->id());
+          Log.verbose(F("ws[%s][%u] disconnected: %u" CR), ws->url(), client->id());
           break;
         case WS_EVT_ERROR:
-          Serial.printf("ws[%s][%u] error(%u): %s\n", server->url(), client->id(), *((uint16_t*)arg), (char*)data);
+          Log.error(F("ws[%s][%u] error(%u): %s" CR), ws->url(), client->id(), *((uint16_t*)arg), (char*)data);
           break;
         case WS_EVT_PONG:
-          Serial.printf("ws[%s][%u] pong[%u]: %s\n", server->url(), client->id(), len, (len)?(char*)data:"");
+          Log.verbose(F("ws[%s][%u] pong[%u]: %s" CR), ws->url(), client->id(), len, (len)?(char*)data:"");
           break;
         case WS_EVT_DATA:
-          // process message if it's a single frame, all data is available and message contains text
+          // process data if it's a single frame and all payload is available and data contains only text
           if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-            // convert data into message string
-            String message;
-            // start an explicit sub block to free unused memory asap
-            {
-              char buffer[info->len + 1];
-              strncpy(buffer, (char*)data, info->len);
-              // make certain that the message ends with a /0 terminator
-              buffer[info->len] = '\0';
-              message = String(buffer);
-            }
-            Serial.printf("ws[%s][%u] received : %s\n", server->url(), client->id(), message.c_str());
+            // convert data into char array
+            char buffer[info->len + 1];
+            strncpy(buffer, (char*)data, info->len);
+            // make certain that the message ends with a /0 terminator
+            buffer[info->len] = '\0';
 
-            processEvent(server, client, message);
+            //String message = String(buffer);
+
+            //Log.verbose("ws[%s][%u] received : %s\n", ws->url(), client->id(), message.c_str());
+            processMessage(ws, client, buffer);
           } else {
             // TODO
           }
           break;
         default:
-          Serial.printf("ws[%s][%u] frame[%u] %s[%llu - %llu]: ", server->url(), client->id(), info->num, (info->message_opcode == WS_TEXT)?"text":"binary", info->index, info->index + len);
-          client->text("{'message': ['state': 'failed', 'description': 'Unexpected message']}");
+          Log.verbose(F("ws[%s][%u] frame[%u] %s[%llu - %llu]" CR), ws->url(), client->id(), info->num, (info->message_opcode == WS_TEXT)?"text":"binary", info->index, info->index + len);
+          // TODO send a response to the client
           break;
         }
     }
 
-    void sendInitEvent(AsyncWebSocket *server, AsyncWebSocketClient *client) {
-
-      DynamicJsonBuffer jsonBuffer;
-      JsonObject& json = jsonBuffer.createObject();
-
-      json["speed"] = 255; //analogRead(MOTOR_A_PWM);
-      // convert JSON into char array payload
-      int length = json.measureLength() + 1;
-      char payload[length];
-      json.printTo(payload, length);
-      Serial.printf("ws[%s][%u] send : %s\n", server->url(), client->id(), payload);
-      client->text(payload);
-    }
-
-    bool processEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, const String& message) {
+    bool processMessage(AsyncWebSocket *ws, AsyncWebSocketClient *client, char* message) {
 
       // try to interpret message as JSON
       DynamicJsonBuffer jsonBuffer;
-      JsonObject& json = jsonBuffer.parseObject(message);
+      JsonObject &json = jsonBuffer.parseObject(message);
       // interrupt if message contains no valid JSON
       if (!json.success()) {
-        Serial.println("Warning: Parsing message into JSON failed.");
+        Log.error(F("Parsing message into JSON failed." CR));
         return false;
       }
 
-      int speed = json["speed"];
-      Serial.printf("Speed is %d\n", speed);
+      // TODO: workaround - replace by Log.verbose(...)
+      Serial.printf("V: ws[%s][%u] received : %s\n", ws->url(), client->id(), String(message).c_str());
 
+      String uuid = json["uuid"];
+      int speed = json["speed"];
       motor->setSpeed(speed);
 
+      notify(ws, client, "message", true);
+
       return true;
+    }
+
+    void notify(AsyncWebSocket *ws, AsyncWebSocketClient *client, String type, bool broadcast = false) {
+
+      DynamicJsonBuffer jsonBuffer;
+      JsonObject& json = jsonBuffer.createObject();
+      json["type"] = type;
+      json["clientId"] = client->id();
+      json["speed"] = motor->getSpeed();
+
+      send(ws, client, &json, broadcast);
+    }
+
+    void send(AsyncWebSocket *ws, AsyncWebSocketClient *client, JsonObject *json, bool broadcast = false) {
+
+      int length = json->measureLength() + 1;
+      char payload[length];
+      json->printTo(payload, length);
+      if (broadcast) {
+        ws->textAll(payload);
+      } else {
+        client->text(payload);
+      }
     }
 };

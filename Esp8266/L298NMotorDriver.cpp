@@ -1,18 +1,18 @@
 #include "L298NMotorDriver.h"
 
-L298NMotorDriver::L298NMotorDriver(bool enabled, bool verbose, unsigned int pinPWM, unsigned int pinInput1, unsigned int pinInput2) : MotorDriver(enabled, verbose) {
+L298NMotorDriver::L298NMotorDriver(bool enabled, unsigned int pinPWM, unsigned int pinInput1, unsigned int pinInput2) : MotorDriver(enabled) {
 
 	_pinPWM = pinPWM;
 	_pinInput1 = pinInput1;
 	_pinInput2 = pinInput2;
 	_currentSpeed = 0;
 
-	analogWriteRange(255); // change PWM range from 1023 to 255
+	analogWriteRange(255); // change pwm range from 1023 to 255
 	pinMode(_pinPWM, OUTPUT);
 	pinMode(_pinInput1, OUTPUT);
 	pinMode(_pinInput2, OUTPUT);
 
-	Serial.print(F("MOTOR SETUP DONE."));
+  Log.verbose(F("Configuration for L298N done : pwd = %d, in1 = %d, in2 = %d" CR), pinPWM, pinInput1, pinInput2);
 }
 
 int L298NMotorDriver::getSpeed() const {
@@ -22,13 +22,6 @@ int L298NMotorDriver::getSpeed() const {
 void L298NMotorDriver::setSpeed(int speed) {
 	// save the current speed setting
 	_currentSpeed = speed;
-
-  // log motor speed settings
-  if (isVerbose()) {
-    Serial.print(F("L298NMotor: speed:"));
-    Serial.println(speed);
-  }
-
 	// activate motors if the driver is enabled
 	if (isEnabled()) {
 		if (speed >= 0) {
@@ -43,4 +36,6 @@ void L298NMotorDriver::setSpeed(int speed) {
 			digitalWrite(_pinInput2, HIGH);
 		}
 	}
+ 
+  Log.verbose(F("Current motor speed is %d" CR), getSpeed());
 }

@@ -12,156 +12,141 @@
     <style>
       :host {
         display: block;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
       .circle {
         position: relative;
       	width: 100%;
       	height: auto;
         padding-top: 100%;
+        -ms-border-radius: 50%;
         -moz-border-radius: 50%;
+        -o-border-radius: 50%;
         -webkit-border-radius: 50%;
         border-radius: 50%;
         background-color: var(--paper-blue-800);
       }
       .inner-circle {
         position: absolute;
-        top: 50%;
-        left: 50%;
         width: 50%;
         height: 50%;
-        transform: translate(-50%, -50%);
+        -ms-border-radius: 50%;
         -moz-border-radius: 50%;
+        -o-border-radius: 50%;
         -webkit-border-radius: 50%;
         border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
         background-color: white;
         text-align: center;
         color: var(--paper-blue-800);
         font-size: 2.5em;
         font-weight: bolder;
       }
-      .inner-circle > a {
+      .inner-circle > span {
         position: absolute;
         top: 50%;
         left: 50%;
         -ms-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
         -webkit-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
-        text-decoration: none;
-        color:inherit;
       }
-      .inner-circle > a:active {
+      .inner-circle:active {
         background-color: var(--paper-blue-grey-200);
-      }
-      .arrow-left {
-        position: absolute;
-        top: 50%;
-        left: 5%;
-        transform: translate(0, -50%);
-        width: 15%;
-        height: 0;
-        padding-top: 25%;
-        padding-bottom: 25%;
-        overflow: hidden;
-      }
-      .arrow-left > a {
-        content: "";
-        display: block;
-        width: 0;
-        height: 0;
-        margin-top: -500px;
-        border-top: 500px solid transparent;
-        border-bottom: 500px solid transparent;
-        border-right: 500px solid white;
-      }
-      .arrow-left > a:active {
-        border-right: 500px solid var(--paper-blue-grey-200);
       }
       .arrow-up {
         position: absolute;
+        height: 0;
+        width: 0;
         top: 5%;
         left: 50%;
+        -ms-transform: translate(-50%, 0);
+        -moz-transform: translate(-50%, 0);
+        -o-transform: translate(-50%, 0);
+        -webkit-transform: translate(-50%, 0);
         transform: translate(-50%, 0);
-        width: 25%;
-        height: 0;
-        padding-left: 25%;
-        padding-bottom: 15%;
-        overflow: hidden;
+        border-color: transparent transparent white transparent;
+        border-style: solid;
+        border-width: 0px 60px 60px 60px;
       }
-      .arrow-up > a {
-        content: "";
-        display: block;
-        width: 0;
-        height: 0;
-        margin-left: -500px;
-        border-left: 500px solid transparent;
-        border-right: 500px solid transparent;
-        border-bottom: 500px solid white;
-      }
-      .arrow-up > a:active {
-        border-bottom: 500px solid var(--paper-blue-grey-200);
+      .arrow-up:active {
+        border-color: transparent transparent var(--paper-blue-grey-200) transparent;
       }
       .arrow-right {
         position: absolute;
-        top: 50%;
-        left: 95%;
-        transform: translate(-50%, -50%);
-        width: 15%;
         height: 0;
-        padding-top: 25%;
-        padding-bottom: 25%;
-        padding-left: 15%;
-        overflow: hidden;
-      }
-      .arrow-right > a {
-        content: "";
-        display: block;
         width: 0;
-        height: 0;
-        margin-top: -500px;
-        margin-left: -500px;
-        border-top: 500px solid transparent;
-        border-bottom: 500px solid transparent;
-        border-left: 500px solid white;
+        top: 50%;
+        right: 5%;
+        -ms-transform: translate(0, -50%);
+        -moz-transform: translate(0, -50%);
+        -o-transform: translate(0, -50%);
+        -webkit-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        border-color: transparent transparent transparent white;
+        border-style: solid;
+        border-width: 60px 0px 60px 60px;
       }
-      .arrow-right > a:active {
-        border-left: 500px solid var(--paper-blue-grey-200);
+      .arrow-right:active {
+        border-color: transparent transparent transparent var(--paper-blue-grey-200);
       }
       .arrow-down {
         position: absolute;
-        bottom: 5%;
-        left: 0;
-        transform: translate(50%, 0);
-        width: 25%;
         height: 0;
-        padding-left: 25%;
-        padding-top: 15%;
-        overflow: hidden;
-      }
-      .arrow-down > a {
-        content: "";
-        display: block;
         width: 0;
-        height: 0;
-        margin-left: -500px;
-        margin-top: -500px;
-        border-left: 500px solid transparent;
-        border-right: 500px solid transparent;
-        border-top: 500px solid white;
+        bottom: 5%;
+        left: 50%;
+        -ms-transform: translate(-50%, 0);
+        -moz-transform: translate(-50%, 0);
+        -o-transform: translate(-50%, 0);
+        -webkit-transform: translate(-50%, 0);
+        transform: translate(-50%, 0);
+        border-color: white transparent transparent transparent;
+        border-style: solid;
+        border-width: 60px 60px 0px 60px;
       }
-      .arrow-down > a:active {
-        border-top: 500px solid var(--paper-blue-grey-200);
+      .arrow-down:active {
+        border-color: var(--paper-blue-grey-200) transparent transparent transparent;
+      }
+      .arrow-left {
+        position: absolute;
+        height: 0;
+        width: 0;
+        top: 50%;
+        left: 5%;
+        -ms-transform: translate(0, -50%);
+        -moz-transform: translate(0, -50%);
+        -o-transform: translate(0, -50%);
+        -webkit-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        border-color: transparent white transparent transparent;
+        border-style: solid;
+        border-width: 60px 60px 60px 0px;
+      }
+      .arrow-left:active {
+        border-color: transparent var(--paper-blue-grey-200) transparent transparent;
       }
 
     </style>
 
     <div class="circle">
-      <div id="cursor" class="inner-circle">
-        <a href="#" on-click="_stop">STOP</a>
+      <div class="inner-circle" on-click="_stop">
+        <span>STOP</span>
       </div>
-      <div class="arrow-left"><a href="#" on-click="_left"></a></div>
-      <div class="arrow-up"><a href="#" on-click="_up"></a></div>
-      <div class="arrow-right"><a href="#" on-click="_right"></a></div>
-      <div class="arrow-down"><a href="#" on-click="_down"></a></div>
+      <div class="arrow-up" on-click="_up"></div>
+      <div class="arrow-right" on-click="_right"></div>
+      <div class="arrow-down" on-click="_down"></div>
+      <div class="arrow-left" on-click="_left"></div>
     </div>
 
   </template>
@@ -189,7 +174,7 @@
         // establish websocket connection
         this.url = 'ws://' + window.location.hostname + '/L298N';
         //this.url = 'ws://esp8266.local/L298N'; // test mode!
-        //this._getWebSocket();
+        this._getWebSocket();
       },
       _stop: function() {
         console.log("hit stop");
@@ -199,14 +184,12 @@
       },
       _up: function() {
         console.log("hit up");
-
       },
       _right: function() {
         console.log("hit right");
       },
       _down: function() {
         console.log("hit down");
-
       },
       _getWebSocket: function() {
         if (this._webSocket === null) {

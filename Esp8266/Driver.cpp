@@ -1,8 +1,7 @@
 #include "Driver.h"
 
-Driver::Driver(bool enabled, bool verbose) {
+Driver::Driver(bool enabled) {
 	_enabled = enabled;
-	_verbose = verbose;
 }
 
 bool Driver::isEnabled() {
@@ -11,12 +10,4 @@ bool Driver::isEnabled() {
 
 void Driver::setEnabled(bool enabled) {
 	_enabled = enabled;
-}
-
-bool Driver::isVerbose() {
-	return _verbose;
-}
-
-void Driver::setVerbose(bool verbose) {
-	_verbose = verbose;
 }

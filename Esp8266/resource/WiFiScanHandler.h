@@ -3,7 +3,7 @@
 #include <AsyncJson.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/AsyncJson.h
 
 class WiFiScanHandler {
-  public :
+  public:
     WiFiScanHandler() {};
 
     void classRequest(AsyncWebServerRequest *request) {

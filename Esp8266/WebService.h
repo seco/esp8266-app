@@ -6,7 +6,6 @@
 
 #include "Service.h"
 
-
 #include "ws/L298NHandler.h"
 
 #include "resource/ESPHandler.h"
@@ -17,7 +16,7 @@
 class WebService : public Service {
 
 	public:
-		WebService(bool enabled, bool verbose);
+		WebService(bool enabled);
 
   private:
     AsyncWebServer webServer;

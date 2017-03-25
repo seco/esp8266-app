@@ -9,7 +9,7 @@
 class WiFiService : public Service {
 
 	public:
-		WiFiService(bool enabled, bool verbose);
+		WiFiService(bool enabled);
 
     bool reset();
 

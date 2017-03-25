@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-
+#include <ArduinoLog.h> // https://github.com/thijse/Arduino-Log
 #include <FS.h> // https://github.com/esp8266/Arduino/tree/master/cores/esp8266/FS.h
 
 #include "Configuration.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 class NotFoundHandler {
-  public :
+  public:
     NotFoundHandler() {};
 
     void classRequest(AsyncWebServerRequest *request) {

@@ -1,6 +1,6 @@
 #include "WiFiService.h"
 
-WiFiService::WiFiService(bool enabled, bool verbose) : Service(enabled, verbose) {
+WiFiService::WiFiService(bool enabled) : Service(enabled) {
 
 	// reset former settings
   reset();
@@ -35,10 +35,7 @@ bool WiFiService::reset() {
   // wait a moment until the new settings are applied
   delay(300);
 
-  if (isVerbose()) {
-     Serial.println(F("WiFi reset done."));
-  }
-
+  Log.verbose(F("WiFi reset done." CR));
 
   //WiFi.setOutputPower(wifiOutputPower);
   //WiFi.setPhyMode(WIFI_PHY_MODE_11B);
@@ -54,12 +51,10 @@ bool WiFiService::setupAP(char const *ssid, char const *passwd) {
   bool succeeded = WiFi.softAP(ssid, passwd);
   delay(300);
 
-  if (isVerbose()) {
-    if (succeeded) {
-      Serial.printf("IP address of AP is: %s\n", WiFi.softAPIP().toString().c_str());
-    } else {
-      Serial.println(F("Warning : Couldn't establish a soft access point."));
-    }
+  if (succeeded) {
+    Log.notice(F("IP address of AP is: %s" CR), WiFi.softAPIP().toString().c_str());
+  } else {
+    Log.error(F("Couldn't establish a soft access point." CR));
   }
 
   return succeeded;
@@ -73,7 +68,7 @@ bool WiFiService::setupWiFi() {
   wifiMulti.addAP(WIFI_SSID_1, WIFI_PASSWD_1);
   wifiMulti.addAP(WIFI_SSID_2, WIFI_PASSWD_2);
   // try to connect to WiFi
-  Serial.println(F("Trying to connect WiFi "));
+  Log.verbose(F("Trying to connect WiFi "));
   uint8_t i = 0;
   while (wifiMulti.run() != WL_CONNECTED && i++ < 20) { // retry 20 times = 10 seconds
     delay(300);
@@ -81,10 +76,10 @@ bool WiFiService::setupWiFi() {
   }
   Serial.println(F("\n"));
   if (i > 20) {
-    Serial.println(F("Warning : Couldn't connect to any WiFi. Please check your WiFi availability / accessibility and restart.\n"));
+    Log.error(F("Couldn't connect to any WiFi. Please check your WiFi availability / accessibility and restart." CR));
   } else {
     succeeded = true;
-    Serial.printf("WiFi successful connected. IP address is: %s\n", WiFi.localIP().toString().c_str());
+    Log.notice(F("WiFi successful connected. IP address is: %s" CR), WiFi.localIP().toString().c_str());
   }
 
   return succeeded;
@@ -101,12 +96,10 @@ bool WiFiService::setupMDNS() {
     succeeded = true;
   }
 
-  if (isVerbose()) {
-    if (succeeded) {
-      Serial.printf("Open [http://%s.local] in your browser.\n", HOST_NAME);
-    } else {
-      Serial.printf("Warning : Couldn't set up [http://%s.local]\n", HOST_NAME);
-    }
+  if (succeeded) {
+    Log.notice(F("Open [http://%s.local] in your browser." CR), HOST_NAME);
+  } else {
+    Log.warning(F("Couldn't set up [http://%s.local]" CR), HOST_NAME);
   }
 
   return succeeded;
