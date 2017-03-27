@@ -11,6 +11,7 @@
 class Esp8266 {
 
 	public:
+
 		Esp8266();
 
 		void run();

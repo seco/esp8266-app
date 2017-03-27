@@ -9,6 +9,7 @@
 class WiFiService : public Service {
 
 	public:
+
 		WiFiService(bool enabled);
 
     bool reset();
@@ -20,5 +21,6 @@ class WiFiService : public Service {
     bool setupMDNS();
 
   private:
-    ESP8266WiFiMulti wifiMulti;
+
+		ESP8266WiFiMulti wifiMulti;
 };

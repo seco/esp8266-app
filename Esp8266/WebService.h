@@ -6,7 +6,8 @@
 
 #include "Service.h"
 
-#include "ws/L298NHandler.h"
+#include "L298NHandler.h"
+#include "RemoteCarHandler.h"
 
 #include "resource/ESPHandler.h"
 #include "resource/FileListingHandler.h"
@@ -16,14 +17,18 @@
 class WebService : public Service {
 
 	public:
+
 		WebService(bool enabled);
 
   private:
-    AsyncWebServer webServer;
+
+		AsyncWebServer webServer;
     AsyncWebSocket l298nWS;
+    AsyncWebSocket remoteCarWS;
 
     L298NHandler l298nHandler;
-    
+    RemoteCarHandler remoteCarHandler;
+
     ESPHandler espHandler;
     FileListingHandler fileListingHandler;
     NotFoundHandler notFoundHandler;

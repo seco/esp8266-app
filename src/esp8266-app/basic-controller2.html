@@ -143,9 +143,9 @@
       <div class="inner-circle" on-click="_stop">
         <span>STOP</span>
       </div>
-      <div class="arrow-up" on-click="_up"></div>
+      <div class="arrow-up" on-click="_forward"></div>
       <div class="arrow-right" on-click="_right"></div>
-      <div class="arrow-down" on-click="_down"></div>
+      <div class="arrow-down" on-click="_backward"></div>
       <div class="arrow-left" on-click="_left"></div>
     </div>
 
@@ -172,24 +172,74 @@
       },
       attached: function() {
         // establish websocket connection
-        this.url = 'ws://' + window.location.hostname + '/L298N';
-        //this.url = 'ws://esp8266.local/L298N'; // test mode!
+        this.url = 'ws://' + window.location.hostname + '/rc';
+        //this.url = 'ws://esp8266.local/rc'; // test mode!
         this._getWebSocket();
-      },
-      _stop: function() {
-        console.log("hit stop");
       },
       _left: function() {
         console.log("hit left");
+
+        // emit changes
+        var json = {
+          speed: 150,
+          command: 'L' // [L]eft
+        };
+
+        if (this._getWebSocket()) {
+          this._getWebSocket().send(JSON.stringify(json));
+        }
       },
-      _up: function() {
-        console.log("hit up");
+      _forward: function() {
+        console.log("hit forward");
+
+        // emit changes
+        var json = {
+          speed: 150,
+          command: 'F' // [F]orward
+        };
+
+        if (this._getWebSocket()) {
+          this._getWebSocket().send(JSON.stringify(json));
+        }
       },
       _right: function() {
         console.log("hit right");
+
+        // emit changes
+        var json = {
+          speed: 150,
+          command: 'R' // [R]ight
+        };
+
+        if (this._getWebSocket()) {
+          this._getWebSocket().send(JSON.stringify(json));
+        }
       },
-      _down: function() {
-        console.log("hit down");
+      _backward: function() {
+        console.log("hit backward");
+
+        // emit changes
+        var json = {
+          speed: 150,
+          command: 'B' // [B]ackward
+        };
+
+        if (this._getWebSocket()) {
+          this._getWebSocket().send(JSON.stringify(json));
+        }
+      },
+      _stop: function() {
+        console.log("hit stop");
+
+        // emit changes
+        var json = {
+          speed: 0,
+          command: 'S' // [S]top
+        };
+
+        if (this._getWebSocket()) {
+          this._getWebSocket().send(JSON.stringify(json));
+        }
       },
       _getWebSocket: function() {
         if (this._webSocket === null) {
@@ -198,18 +248,22 @@
         return this._webSocket;
       },
       _createWebSocket: function() {
-        this._log('Trying to establish WebSocket', this.url);
+        console.log('Trying to establish WebSocket', this.url);
         var _webSocket = new WebSocket(this.url);
         var _this = this;
         _webSocket.onopen = function(event) {
-          _this._log('WebSocket established', event);
+          console.log('WebSocket established', event);
         };
         _webSocket.onmessage = function(event) {
           var json = JSON.parse(event.data);
-          _this._log('Received', json);
+          console.log('Received', event.data);
+
         };
         _webSocket.onerror = function(event) {
-          _this._log('WebSocket error', event);
+          console.log('WebSocket error', event);
+        };
+        _webSocket.onclose = function(event) {
+          console.log('WebSocket closed.', event);
         };
 
         return _webSocket;

@@ -5,7 +5,9 @@
 #include <AsyncJson.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/AsyncJson.h
 
 class FileListingHandler {
+
   public:
+
     FileListingHandler() {};
 
     void classRequest(AsyncWebServerRequest *request) {

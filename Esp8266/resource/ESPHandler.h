@@ -9,7 +9,9 @@ extern "C" {
 #include <AsyncJson.h> // https://github.com/me-no-dev/ESPAsyncWebServer/blob/master/src/AsyncJson.h
 
 class ESPHandler {
+
   public:
+
     ESPHandler() {};
 
     void classRequest(AsyncWebServerRequest *request) {

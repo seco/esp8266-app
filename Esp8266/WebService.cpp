@@ -3,12 +3,17 @@
 WebService::WebService(bool enabled) :
   webServer(80),
   l298nWS("/L298N"),
+  remoteCarWS("/rc"),
   l298nHandler(true, PIN_L298N_ENA, PIN_L298N_IN1, PIN_L298N_IN2),
+  remoteCarHandler(true),
   Service(enabled) {
 
   // handle web sockets
   l298nWS.onEvent(std::bind(&L298NHandler::onEvent, l298nHandler, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
   webServer.addHandler(&l298nWS);
+
+  remoteCarWS.onEvent(std::bind(&RemoteCarHandler::onEvent, remoteCarHandler, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6));
+  webServer.addHandler(&remoteCarWS);
 
   // rewrite root to default index file
   webServer.rewrite("/", DEFAULT_INDEX);

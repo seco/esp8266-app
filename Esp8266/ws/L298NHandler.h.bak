@@ -37,17 +37,13 @@ class L298NHandler {
           // process data if it's a single frame and all payload is available and data contains only text
           if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
             // convert data into char array
-            char buffer[info->len + 1];
-            strncpy(buffer, (char*)data, info->len);
-            // make certain that the message ends with a /0 terminator
-            buffer[info->len] = '\0';
-
-            //String message = String(buffer);
-
-            //Log.verbose("ws[%s][%u] received : %s\n", ws->url(), client->id(), message.c_str());
-            processMessage(ws, client, buffer);
+            char message[info->len + 1];
+            strncpy(message, (char*)data, info->len);
+            // make certain that the message ends with a \0 terminator
+            message[info->len] = '\0';
+            processMessage(ws, client, message);
           } else {
-            // TODO
+            // TODO send a response to the client
           }
           break;
         default:
