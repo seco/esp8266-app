@@ -12,6 +12,8 @@ class L298NMotorDriver : public MotorDriver {
 
 		void setSpeed(int speed);
 
+    void apply(int speed);
+
 	private:
 
 		unsigned int _pinPWM;

@@ -180,65 +180,55 @@
         console.log("hit left");
 
         // emit changes
-        var json = {
-          speed: 150,
+        var object = {
+          speed: 25,
           command: 'L' // [L]eft
         };
-
-        if (this._getWebSocket()) {
-          this._getWebSocket().send(JSON.stringify(json));
-        }
+        this._emit(object);
       },
       _forward: function() {
         console.log("hit forward");
 
         // emit changes
-        var json = {
-          speed: 150,
+        var object = {
+          speed: 25,
           command: 'F' // [F]orward
         };
-
-        if (this._getWebSocket()) {
-          this._getWebSocket().send(JSON.stringify(json));
-        }
+        this._emit(object);
       },
       _right: function() {
         console.log("hit right");
 
         // emit changes
-        var json = {
-          speed: 150,
+        var object = {
+          speed: 25,
           command: 'R' // [R]ight
         };
-
-        if (this._getWebSocket()) {
-          this._getWebSocket().send(JSON.stringify(json));
-        }
+        this._emit(object);
       },
       _backward: function() {
         console.log("hit backward");
 
         // emit changes
-        var json = {
-          speed: 150,
+        var object = {
+          speed: 25,
           command: 'B' // [B]ackward
         };
-
-        if (this._getWebSocket()) {
-          this._getWebSocket().send(JSON.stringify(json));
-        }
+        this._emit(object);
       },
       _stop: function() {
         console.log("hit stop");
 
         // emit changes
-        var json = {
+        var object = {
           speed: 0,
           command: 'S' // [S]top
         };
-
+        this._emit(object);
+      },
+      _emit: function(object) {
         if (this._getWebSocket()) {
-          this._getWebSocket().send(JSON.stringify(json));
+          this._getWebSocket().send(JSON.stringify(object));
         }
       },
       _getWebSocket: function() {

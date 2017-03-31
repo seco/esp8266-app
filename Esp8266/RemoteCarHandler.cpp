@@ -17,20 +17,20 @@ void RemoteCarHandler::processMessage(AsyncWebSocket *ws, AsyncWebSocketClient *
 
   switch (command.charAt(0)) {
     case 'L': // [L]eft
-      motorA->setSpeed(speed * -1);
-      motorB->setSpeed(speed);
+      motorA->apply(speed * -1);
+      motorB->apply(speed);
       break;
     case 'F': // [F]orward
-      motorA->setSpeed(speed);
-      motorB->setSpeed(speed);
+      motorA->apply(speed);
+      motorB->apply(speed);
       break;
     case 'R': // [R]ight
-      motorA->setSpeed(speed);
-      motorB->setSpeed(speed * -1);
+      motorA->apply(speed);
+      motorB->apply(speed * -1);
       break;
     case 'B': // [B]ackward
-      motorA->setSpeed(speed * -1);
-      motorB->setSpeed(speed * -1);
+      motorA->apply(speed * -1);
+      motorB->apply(speed * -1);
       break;
     case 'S': // [S]top
       motorA->setSpeed(0);

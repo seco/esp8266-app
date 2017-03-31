@@ -7,7 +7,7 @@ L298NMotorDriver::L298NMotorDriver(bool enabled, unsigned int pinPWM, unsigned i
 	_pinInputB = pinInputB;
 	_currentSpeed = 0;
 
-	analogWriteRange(255); // change pwm range from 1023 to 255
+	analogWriteRange(PMW_RANGE); // adjust PMW range
 	pinMode(_pinPWM, OUTPUT);
 	pinMode(_pinInputA, OUTPUT);
 	pinMode(_pinInputB, OUTPUT);
@@ -20,22 +20,34 @@ int L298NMotorDriver::getSpeed() const {
 }
 
 void L298NMotorDriver::setSpeed(int speed) {
-	// save the current speed setting
-	_currentSpeed = speed;
 	// activate motors if the driver is enabled
 	if (isEnabled()) {
 		if (speed >= 0) {
+      // limit speed if speed exceeds PMW_RANGE
+      if (speed > PMW_RANGE) {
+        speed = PMW_RANGE;
+      }
 			// if the speed is positive or 0 then move forward
 			analogWrite(_pinPWM, speed);
 			digitalWrite(_pinInputA, HIGH);
 			digitalWrite(_pinInputB, LOW);
 		} else {
+			// limit speed if speed exceeds PMW_RANGE
+      if (-speed > PMW_RANGE) {
+        speed = -PMW_RANGE;
+      }
 			// if the speed is negative then move backward
 			analogWrite(_pinPWM, -speed);
 			digitalWrite(_pinInputA, LOW);
 			digitalWrite(_pinInputB, HIGH);
 		}
 	}
-
+  // save the current speed setting
+  _currentSpeed = speed;
   Log.verbose(F("Current motor speed is %d" CR), getSpeed());
 }
+
+void L298NMotorDriver::apply(int speed) {
+  setSpeed(_currentSpeed+speed);
+}
+
