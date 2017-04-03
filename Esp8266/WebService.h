@@ -7,6 +7,7 @@
 #include "Service.h"
 
 #include "L298NHandler.h"
+#include "MotorShieldHandler.h"
 #include "RemoteCarHandler.h"
 
 #include "resource/ESPHandler.h"
@@ -24,9 +25,11 @@ class WebService : public Service {
 
 		AsyncWebServer webServer;
     AsyncWebSocket l298nWS;
+    AsyncWebSocket motorShieldWS;
     AsyncWebSocket remoteCarWS;
 
     L298NHandler l298nHandler;
+    MotorShieldHandler motorShieldHandler;
     RemoteCarHandler remoteCarHandler;
 
     ESPHandler espHandler;

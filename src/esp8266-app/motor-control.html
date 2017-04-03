@@ -74,7 +74,7 @@
       attached: function() {
         // establish websocket connection
         this.url = 'ws://' + window.location.hostname + '/L298N';
-        //this.url = 'ws://192.168.4.1/L298N'; // test mode!
+        //this.url = 'ws://esp8266.local/shield'; // test mode!
         this._getWebSocket();
       },
       _setSpeed: function(speed) {
