@@ -17,8 +17,10 @@
 
 <link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
 
+<link rel="import" href="basic-control.html">
 <link rel="import" href="esp-overview.html">
 <link rel="import" href="motor-control.html">
+<link rel="import" href="motion-control.html">
 <link rel="import" href="widget-layout.html">
 
 <dom-module id="esp8266-app">
@@ -115,11 +117,11 @@
             <esp-overview></esp-overview>
           </widget-layout>
 
-          <widget-layout key="_test" title="Test">
+          <widget-layout key="_motion_control" title="Motion Control">
             <span class="widget-label" slot="header">
               <iron-icon icon="icons:assessment"></iron-icon>
             </span>
-            <div>Test content</div>
+            <motion-control></motion-control>
           </widget-layout>
 
           <widget-layout key="_motor_control" title="Motor control">
@@ -127,6 +129,13 @@
               <iron-icon icon="hardware:toys"></iron-icon>
             </span>
             <motor-control></motor-control>
+          </widget-layout>
+
+          <widget-layout key="_motor_control" title="Remote car control">
+            <span class="widget-label" slot="header">
+              <iron-icon icon="hardware:toys"></iron-icon>
+            </span>
+            <basic-control></basic-control>
           </widget-layout>
 
         </div>

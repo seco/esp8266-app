@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../../bower_components/device-orientation/device-orientation.html">
+
+<link rel="import" href="spinner-ui.html">
+
+<dom-module id="motion-control">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+      spinner-ui {
+        width: 100%;
+        height: 100%;
+      }
+
+    </style>
+
+    <spinner-ui id="_spinner"></spinner-ui>
+
+    <device-orientation orientation="{{orientation}}"></device-orientation>
+    <ul>
+      <li>Alpha: [[orientation.alpha]]</li>
+      <li>Beta: [[orientation.beta]]</li>
+      <li>Gamma: [[orientation.gamma]]</li>
+    </ul>
+
+  </template>
+
+  <script>
+    class MotionControl extends Polymer.Element {
+
+      static get is() { return 'motion-control'; }
+
+      static get properties() {
+        return {
+          orientation: {
+            type: Object,
+            observer: '_orientationChanged'
+          }
+        };
+      }
+
+      _orientationChanged() {
+        this.$._spinner.setDegree(this.orientation.alpha);
+      }
+    }
+    window.customElements.define(MotionControl.is, MotionControl);
+  </script>
+</dom-module>

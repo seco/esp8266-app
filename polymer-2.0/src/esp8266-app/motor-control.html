@@ -86,7 +86,7 @@
 
       _speedChanged() {
         console.info("Speed changed to %s.", this.speed);
-        // emit changes
+        // emit change
         this._emit({speed: this.speed});
         // update animated icon
         this._updateAnimatedIcon();
@@ -139,13 +139,13 @@
           var json = JSON.parse(event.data);
 
           if (json.type == 'connect') {
-            console.info('Received clientId [%s] and inital speed [%s] from server.', json.clientId, json.speed);
+            console.info('Received clientId [%s] and inital speed [%s] from [%s].', json.clientId, json.speed, this.url);
             _this.clientId = json.clientId;
             _this._setSpeed(json.speed);
           }
           // adjust speed when some other clientId changed the value
           if (_this.clientId != json.clientId) {
-            console.info('ClientId [%s] changed speed [%s] value.', json.clientId, json.speed);
+            console.info('ClientId [%s] changed speed [%s] value on [%s].', json.clientId, json.speed, this.url);
             _this._setSpeed(json.speed);
           }
         };

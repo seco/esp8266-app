@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<!-- import CSS mixin shim -->
+<link rel="import" href="../../bower_components/shadycss/apply-shim.html">
 
-<dom-module id="remote-control">
+<dom-module id="spinner-ui">
   <template strip-whitespace>
     <style>
       :host {
@@ -10,7 +12,6 @@
         -ms-user-select: none;
         user-select: none;
       }
-
       .container {
         position: relative;
       	width: 100%;
@@ -38,33 +39,33 @@
         -webkit-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
       }
-
-
     </style>
     <div class="container">
-      <div id="control_id" class="control" on-click="_rotate">
+      <div id="_control" class="control" on-click="_rotate">
         <span>[[degree]]</span>
       </div>
     </div>
   </template>
 
   <script>
-    Polymer({
-      is: 'remote-control',
-      properties: {
-        degree: {
-          type: Number,
-          value: 0
-        },
-        step: {
-          type: Number,
-          value: 15
-        }
-      },
-      listeners: {
-        '_rotate': '_rotate'
-      },
-      _rotate: function() {
+    class SpinnerUI extends Polymer.Element {
+
+      static get is() { return 'spinner-ui'; }
+
+      static get properties() {
+        return {
+          degree: {
+            type: Number,
+            value: 0
+          },
+          step: {
+            type: Number,
+            value: 15
+          }
+        };
+      }
+
+      _rotate() {
         console.log("rotate :: " + this.degree);
 
         if (this.degree < 360) {
@@ -74,8 +75,9 @@
         }
 
         this.setDegree(this.degree);
-      },
-      setDegree: function(degree) {
+      }
+
+      setDegree(degree) {
 
         degree = Math.round(degree);
 
@@ -83,8 +85,9 @@
           this.degree = degree;
         }
 
-        this.transform('rotate(' + this.degree + 'deg)', this.$.control_id);
+        this.$._control.style.transform = 'rotate(' + this.degree + 'deg)';
       }
-    });
+    }
+    window.customElements.define(SpinnerUI.is, SpinnerUI);
   </script>
 </dom-module>
