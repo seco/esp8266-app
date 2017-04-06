@@ -1,0 +1,152 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
+
+<dom-module id="motor-control">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+      .container {
+        @apply(--layout-horizontal);
+        width: 100%;
+      }
+      paper-slider {
+        width: 100%;
+        --paper-slider-container-color: var(--paper-red-500);
+        --paper-slider-secondary-color: var(--paper-green-500);
+        --paper-slider-active-color: transparent;
+        --paper-slider-knob-color: var(--paper-blue-900);
+        --paper-slider-pin-color: var(--paper-blue-900);
+        --paper-slider-knob-start-color: var(--paper-blue-900);
+        --paper-slider-knob-start-border-color: var(--paper-blue-900);
+        --paper-slider-pin-start-color: var(--paper-blue-900);
+        --paper-slider-height: 4px;
+      }
+      iron-icon {
+        --iron-icon-height: 10vh;
+        --iron-icon-width: 10vw;
+        animation-name: rotation;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-duration: var(--duration, 0s);
+        animation-direction: var(--direction, normal);
+      }
+      @keyframes rotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <div class="container">
+      <iron-icon id="icon_id" icon="hardware:toys"></iron-icon>
+      <paper-slider min="-255" max="255" pin step="15" value="{{speed}}"></paper-slider>
+    <div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'motor-control',
+      properties: {
+        speed: {
+          type: Number,
+          value: 0,
+          observer: '_speedChanged'
+        },
+        url: {
+          type: String
+        },
+        _clientId: {
+          type: String
+        },
+        _webSocket: {
+          type: Object,
+          value: null
+        }
+      },
+      attached: function() {
+        // establish websocket connection
+        this.url = 'ws://' + window.location.hostname + '/L298N';
+        //this.url = 'ws://esp8266.local/shield'; // test mode!
+        this._getWebSocket();
+      },
+      _setSpeed: function(speed) {
+        this.speed = speed;
+      },
+      _speedChanged: function() {
+
+        console.info('Send', speed);
+
+        // emit changes
+        var speed = {
+          speed: this.speed
+        };
+
+        if (this._getWebSocket()) {
+          this._getWebSocket().send(JSON.stringify(speed));
+        }
+
+        this._updateStyle();
+      },
+      _updateStyle: function() {
+        // adapt animation preferences
+        var duration = this.speed;
+        var direction = 'normal';
+        if (duration < 0) {
+          duration = duration * -1;
+          direction = 'reverse';
+        }
+        // re-calculate animation duration
+        duration = Math.round(500 / duration) / 10;
+        // update animation styles
+        this.customStyle['--duration'] = duration + 's';
+        this.customStyle['--direction'] = direction;
+        this.updateStyles();
+      },
+      _getWebSocket: function() {
+        if (this._webSocket === null) {
+          this._webSocket = this._createWebSocket();
+        }
+
+        return this._webSocket;
+      },
+      _createWebSocket: function() {
+        console.log('Trying to establish WebSocket', this.url);
+        var _webSocket = new WebSocket(this.url);
+        var _this = this;
+        _webSocket.onopen = function(event) {
+          console.log('WebSocket established', event);
+        };
+        _webSocket.onmessage = function(event) {
+          var json = JSON.parse(event.data);
+          console.log('Received', event.data);
+
+          if (json.type == 'connect') {
+            _this.clientId = json.clientId;
+            _this._setSpeed(json.speed);
+          }
+
+          if (_this.clientId != json.clientId) {
+            console.log('ADJUST SPEED id=' + this.clientId, json.speed);
+            _this._setSpeed(json.speed);
+          }
+        };
+        _webSocket.onerror = function(event) {
+          console.log('WebSocket error', event);
+        };
+        _webSocket.onclose = function(event) {
+          console.log('WebSocket closed.', event);
+        };
+
+        return _webSocket;
+      }
+    });
+  </script>
+</dom-module>

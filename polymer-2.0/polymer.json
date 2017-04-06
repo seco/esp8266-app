@@ -1,0 +1,9 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/esp8266-app/esp8266-app.html",
+  "lint": {
+    "rules": [
+      "polymer-2"
+    ]
+  }
+}

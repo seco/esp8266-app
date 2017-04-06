@@ -1,0 +1,243 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/app-layout/app-grid/app-grid-style.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
+
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-elements.html">
+
+<link rel="import" href="basic-controller1.html">
+<link rel="import" href="basic-controller2.html">
+<link rel="import" href="motor-control.html">
+<link rel="import" href="esp-overview.html">
+<link rel="import" href="led-dimmer.html">
+<link rel="import" href="led-toggle.html">
+<link rel="import" href="log-behavior.html">
+<link rel="import" href="motion-controller.html">
+<link rel="import" href="widget-layout.html">
+
+<dom-module id="esp8266-app">
+  <template strip-whitespace>
+    <style is="custom-style" include="app-grid-style">
+      :host {
+        display: block;
+        @apply(--paper-font-common-base);
+        --app-grid-gutter: 5px;
+        --app-grid-expandible-item-columns: 3;
+        --app-grid-item-height: 100%;
+        --app-grid-columns: 2;
+      }
+      app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 30vh;
+        color: white;
+        background-color: var(--paper-blue-500);
+        background-size: cover;
+      }
+      [main-title] {
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+      [condensed-title] {
+        font-size: 1em;
+        font-weight: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      @media screen and (orientation: landscape) {
+        app-toolbar.tall {
+          height: 10vh;
+        }
+      }
+      @media screen and (orientation: portrait) {
+        app-toolbar.tall {
+          height: 30vh;
+        }
+      }
+      @media screen and (min-width: 1200px) {
+        :host {
+          --app-grid-columns: 3;
+        }
+      }
+      @media screen and (max-width: 700px) {
+        :host {
+          --app-grid-columns: 1;
+        }
+      }
+      .content-area {
+        background-color: white;
+      }
+      .widget-label {
+        margin: 0px 2px 0px 2px;
+        padding: 5px 15px 5px 15px;
+        border-radius: 20px;
+        background-color: var(--paper-red-500);
+        color: white;
+        font-size: 1em;
+        font-weight: 500;
+        line-height: 1.5em;
+        white-space: nowrap;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+      .widget-label-font-small {
+        font-size: 0.5em;
+      }
+    </style>
+    <!-- application -->
+    <app-header-layout fullbleed>
+      <!-- header -->
+      <app-header condenses fixed
+          effects="waterfall resize-snapped-title fade-background"
+          effects-config='{"resize-snapped-title": {"startsAt": 0.8, "duration": "100ms"}, "fade-background": {"startsAt": 0.8, "endsAt": 0.9}}'>
+        <app-toolbar sticky>
+          <div condensed-title>[[app_title]]</div>
+          <paper-icon-button icon="{{_isCollapsed(collapsed)}}" on-tap="_toggleWidgets"></paper-icon-button>
+        </app-toolbar>
+        <app-toolbar class="tall">
+          <div spacer main-title>[[app_title]]</div>
+        </app-toolbar>
+      </app-header>
+      <!-- content area -->
+      <div class="content-area">
+        <div class="app-grid">
+
+          <widget-layout id="widget_esp_overview_id" title="ESP overview">
+            <span class="widget-label">
+              <iron-icon icon="icons:assessment"></iron-icon>
+            </span>
+            <esp-overview></esp-overview>
+          </widget-layout>
+
+          <!--widget-layout id="widget_led_toggle_id" title="LED toggle">
+            <span class="widget-label">
+              <iron-icon icon="icons:lightbulb-outline"></iron-icon>
+              [[_toString(toggle)]]
+            </span>
+            <led-toggle toggle="{{toggle}}"></led-toggle>
+          </widget-layout-->
+
+          <widget-layout id="widget_motor_control_id" title="Motor control">
+            <span class="widget-label">
+              <iron-icon icon="hardware:toys"></iron-icon>
+            </span>
+            <motor-control></motor-control>
+          </widget-layout>
+
+          <!--widget-layout id="widget_led_dimmer_id" title="LED dimmer">
+            <span class="widget-label">
+              <iron-icon icon="icons:lightbulb-outline"></iron-icon>
+              [[brightness]]
+            </span>
+            <led-dimmer brightness="{{brightness}}"></led-dimmer>
+          </widget-layout-->
+
+          <widget-layout id="widget_basic_controller1_id" title="Basic Controller 1">
+            <span class="widget-label">
+              <iron-icon icon="hardware:device-hub"></iron-icon>
+            </span>
+            <basic-controller1></basic-controller1>
+          </widget-layout>
+
+          <widget-layout id="widget_basic_controller2_id" title="Basic Controller 2">
+            <span class="widget-label">
+              <iron-icon icon="hardware:device-hub"></iron-icon>
+            </span>
+            <basic-controller2></basic-controller2>
+          </widget-layout>
+
+          <!--widget-layout id="widget_motion_controller_id" title="Motion controller">
+            <span class="widget-label">
+              Motion controller
+            </span>
+            <motion-controller></motion-controller>
+          </widget-layout-->
+
+        </div>
+      </div>
+    </app-header-layout>
+
+    <!-- service worker -->
+    <!--platinum-sw-register skip-waiting
+                          clients-claim
+                          auto-register
+                          reload-on-install>
+      <platinum-sw-cache default-cache-strategy="fastest"></platinum-sw-cache>
+    </platinum-sw-register-->
+  </template>
+
+  <script>
+    Polymer({
+      is: 'esp8266-app',
+      properties: {
+        app_title: {
+          type: String,
+          value: 'ESP8266',
+        },
+        collapsed: {
+          type: Boolean,
+          value: true,
+          notify: true
+        }
+      },
+      listeners: {
+        'toggle': '_applyToggleState'
+      },
+      attached: function() {
+        // listen to window resizing events
+        this._updateGridStyles = this._updateGridStyles || function() {
+            this.updateStyles();
+          }.bind(this);
+        window.addEventListener('resize', this._updateGridStyles);
+        // apply icon toogle state initially
+        this._applyToggleState();
+      },
+      detached: function() {
+        window.removeEventListener('resize', this._updateGridStyles);
+      },
+      _getOrigin: function() {
+        return window.location.origin;
+      },
+      _isCollapsed: function(collapsed) {
+        return collapsed ? 'icons:expand-more' : 'icons:expand-less';
+      },
+      _applyToggleState: function() {
+        // compute toggle state of all <widget-layout> elements
+        var nodes = this.querySelectorAll('widget-layout');
+        var state = 0;
+        for (var i = 0; i < nodes.length; i++) {
+          state += nodes[i].isCollapsed();
+        }
+        // switch toggle according to state result
+        this.collapsed = state === 0 ? false : true;
+      },
+      _toggleWidgets: function() {
+        // toggle all <widget-layout> elements
+        this.collapsed = !this.collapsed;
+        var nodes = this.querySelectorAll("widget-layout");
+        for (var i = 0; i < nodes.length; i++) {
+          nodes[i].collapse(this.collapsed);
+        }
+      },
+      _toString: function(toggle) {
+        return this.toggle ? "ON" : "OFF";
+      }
+    });
+  </script>
+</dom-module>
