@@ -2,9 +2,9 @@
 
 RemoteCarHandler::RemoteCarHandler(bool enabled) {
 
-  motorA = new L298NMotorDriver(enabled, PIN_L298N_ENA, PIN_L298N_IN1, PIN_L298N_IN2);
+  motorA = new MotorShieldDriver(enabled, MOTOR_A_SPEED, MOTOR_A_DIR);
   motorA->setSpeed(0);
-  motorB = new L298NMotorDriver(enabled, PIN_L298N_ENB, PIN_L298N_IN3, PIN_L298N_IN4);
+  motorB = new MotorShieldDriver(enabled, MOTOR_B_SPEED, MOTOR_B_DIR);
   motorB->setSpeed(0);
 
   Log.verbose(F("Setup for remote control done." CR));

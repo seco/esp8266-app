@@ -168,31 +168,32 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.url = 'ws://' + window.location.hostname + '/rc';
+        this.url = 'ws://esp8266.local/rc';
+        //this.url = 'ws://' + window.location.hostname + '/rc';
       }
 
       _left() {
         console.info("tap left");
         // emit change [L]eft
-        this._emit({speed: 25, command: 'L'});
+        this._emit({speed: 50, command: 'L'});
       }
 
       _forward() {
         console.info("tap forward");
         // emit change [F]orward
-        this._emit({speed: 25, command: 'F'});
+        this._emit({speed: 50, command: 'F'});
       }
 
       _right() {
         console.info("tap right");
         // emit change [R]ight
-        this._emit({speed: 25, command: 'R'});
+        this._emit({speed: 50, command: 'R'});
       }
 
       _backward() {
         console.info("tap backward");
         // emit change [B]ackward
-        this._emit({speed: 25, command: 'B'});
+        this._emit({speed: 50, command: 'B'});
       }
 
       _stop() {

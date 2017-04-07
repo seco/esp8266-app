@@ -12,7 +12,7 @@ L298NMotorDriver::L298NMotorDriver(bool enabled, unsigned int pinPWM, unsigned i
 	pinMode(_pinInputA, OUTPUT);
 	pinMode(_pinInputB, OUTPUT);
 
-  Log.verbose(F("Configuration for L298N done : pwd = %d, in1 = %d, in2 = %d" CR), pinPWM, pinInputA, pinInputB);
+  Log.verbose(F("Configuration for L298N done : pwm = %d, in1 = %d, in2 = %d" CR), pinPWM, pinInputA, pinInputB);
 }
 
 int L298NMotorDriver::getSpeed() const {

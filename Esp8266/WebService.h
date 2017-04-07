@@ -24,12 +24,11 @@ class WebService : public Service {
   private:
 
 		AsyncWebServer webServer;
+		
     AsyncWebSocket l298nWS;
-    AsyncWebSocket motorShieldWS;
     AsyncWebSocket remoteCarWS;
 
     L298NHandler l298nHandler;
-    MotorShieldHandler motorShieldHandler;
     RemoteCarHandler remoteCarHandler;
 
     ESPHandler espHandler;
