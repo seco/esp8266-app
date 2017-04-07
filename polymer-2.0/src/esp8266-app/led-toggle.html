@@ -1,0 +1,75 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<dom-module id="led-toggle">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+      .container {
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+        width: 100%;
+      }
+      iron-icon {
+        --iron-icon-height: 10vh;
+        --iron-icon-width: 10vw;
+        stroke: var(--paper-grey-500);
+        stroke-width: 0.01em;
+        fill: var(--led-toggle-opacity, 'rgba(255, 255, 0, 0)');
+      }
+    </style>
+    <div class="container">
+      <iron-icon icon="icons:lightbulb-outline"></iron-icon>
+      <paper-toggle-button checked="{{toggle}}" on-change="_toggleChanged"></paper-toggle-button>
+    </div>
+  </template>
+
+  <script>
+    class LedToggle extends Polymer.Element {
+
+      static get is() { return 'led-toggle'; }
+
+      static get properties() {
+        return {
+          url: {
+            type: String
+          },
+          toggle: {
+            type: Boolean,
+            value: false,
+            notify: true
+          }
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.url = window.location.origin + "/led";
+        this._updateAnimatedIcon();
+      }
+
+      _toggleChanged(event) {
+        console.info("Led toggled: [%s]", this.toggle);
+        // emit change
+        // TODO
+        // update animated icon
+        this._updateAnimatedIcon();
+      }
+
+      _updateAnimatedIcon() {
+        var opacity = this.toggle ? 1 : 0;
+        this.updateStyles({'--led-toggle-opacity': 'rgba(255, 255, 0, ' + opacity + ')'});
+      }
+
+      // TODO implement ajax or ws connection
+    }
+    window.customElements.define(LedToggle.is, LedToggle);
+  </script>
+</dom-module>

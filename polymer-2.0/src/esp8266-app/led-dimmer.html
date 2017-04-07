@@ -5,7 +5,7 @@
 
 <link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 
-<dom-module id="motor-control">
+<dom-module id="led-dimmer">
   <template strip-whitespace>
     <style>
       :host {
@@ -13,52 +13,34 @@
       }
       .container {
         @apply --layout-horizontal;
+        @apply --layout-center-justified;
         width: 100%;
       }
       paper-slider {
         width: 100%;
-        --paper-slider-container-color: var(--paper-red-500);
-        --paper-slider-secondary-color: var(--paper-green-500);
-        --paper-slider-active-color: transparent;
-        --paper-slider-knob-color: var(--paper-blue-900);
-        --paper-slider-pin-color: var(--paper-blue-900);
-        --paper-slider-knob-start-color: var(--paper-blue-900);
-        --paper-slider-knob-start-border-color: var(--paper-blue-900);
-        --paper-slider-pin-start-color: var(--paper-blue-900);
-        --paper-slider-height: 4px;
       }
       iron-icon {
         --iron-icon-height: 10vh;
         --iron-icon-width: 10vw;
-        animation-name: rotation;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
-        animation-duration: var(--duration, 0s);
-        animation-direction: var(--direction, normal);
-      }
-      @keyframes rotation {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
+        stroke: var(--paper-grey-500);
+        stroke-width: 0.01em;
+        fill: var(--led-dimmer-opacity, 'rgba(255, 255, 0, 0)');
       }
     </style>
     <div class="container">
-      <iron-icon icon="hardware:toys"></iron-icon>
-      <paper-slider id="_slider" min="-255" max="255" pin step="15" value="{{speed}}"></paper-slider>
+      <iron-icon icon="icons:lightbulb-outline"></iron-icon>
+      <paper-slider id="_slider" min="0" max="255" pin value="{{brightness}}"></paper-slider>
     <div>
   </template>
 
   <script>
-    class MotorControl extends Polymer.Element {
+    class LedDimmer extends Polymer.Element {
 
-      static get is() { return 'motor-control'; }
+      static get is() { return 'led-dimmer'; }
 
       static get properties() {
         return {
-          url: {
+            url: {
             type: String
           },
           _clientId: {
@@ -68,43 +50,33 @@
             type: Object,
             value: null
           },
-          speed: {
+          brightness: {
             type: Number,
-            observer: '_speedChanged'
+            observer: '_brightnessChanged'
           }
         };
       }
 
       connectedCallback() {
         super.connectedCallback();
-        this.url = 'ws://' + window.location.hostname + '/L298N';
+        this.url = 'ws://' + window.location.hostname + '/led';
       }
 
-      _setSpeed(speed) {
-        this.speed = speed;
+      _setBrightness(brightness) {
+        this.brightness = brightness;
       }
 
-      _speedChanged() {
-        console.info("Speed changed to %s.", this.speed);
+      _brightnessChanged() {
+        console.info("Brightness changed to %s.", this.brightness);
         // emit change
-        this._emit({speed: this.speed});
+        this._emit({brightness: this.brightness});
         // update animated icon
         this._updateAnimatedIcon();
       }
 
       _updateAnimatedIcon() {
-        // adapt animation preferences
-        var duration = this.speed;
-        var direction = 'normal';
-        if (duration < 0) {
-          duration = duration * -1;
-          direction = 'reverse';
-        }
-        // re-calculate animation duration
-        duration = Math.round(500 / duration) / 10;
-        // update animation styles
-        this.updateStyles({'--duration': duration + 's'});
-        this.updateStyles({'--direction': direction});
+        var opacity = this.brightness / 255;
+        this.updateStyles({'--led-dimmer-opacity': 'rgba(255, 255, 0, ' + opacity + ')'});
       }
 
       _emit(object) {
@@ -139,14 +111,14 @@
           var json = JSON.parse(event.data);
 
           if (json.type == 'connect') {
-            console.info('Received clientId [%s] and inital speed [%s] from [%s].', json.clientId, json.speed, this.url);
+            console.info('Received clientId [%s] and inital brightness [%s] from [%s].', json.clientId, json.brightness, this.url);
             _this.clientId = json.clientId;
-            _this._setSpeed(json.speed);
+            _this._setBrightness(json.brightness);
           }
-          // adjust speed when some other clientId changed the value
+          // adjust brightness when some other clientId changed the value
           if (_this.clientId != json.clientId) {
-            console.info('ClientId [%s] changed speed [%s] value on [%s].', json.clientId, json.speed, this.url);
-            _this._setSpeed(json.speed);
+            console.info('ClientId [%s] changed brightness [%s] value on [%s].', json.clientId, json.brightness, this.url);
+            _this._setBrightness(json.brightness);
           }
         };
         _webSocket.onerror = function(event) {
@@ -159,6 +131,6 @@
         return _webSocket;
       }
     }
-    window.customElements.define(MotorControl.is, MotorControl);
+    window.customElements.define(LedDimmer.is, LedDimmer);
   </script>
 </dom-module>

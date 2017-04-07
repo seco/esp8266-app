@@ -19,6 +19,8 @@
 
 <link rel="import" href="basic-control.html">
 <link rel="import" href="esp-overview.html">
+<link rel="import" href="led-dimmer.html">
+<link rel="import" href="led-toggle.html">
 <link rel="import" href="motor-control.html">
 <link rel="import" href="motion-control.html">
 <link rel="import" href="widget-layout.html">
@@ -117,6 +119,21 @@
             <esp-overview></esp-overview>
           </widget-layout>
 
+          <widget-layout key="_led_dimmer" title="LED dimmer">
+            <span class="widget-label" slot="header">
+              <iron-icon icon="icons:lightbulb-outline"></iron-icon>
+            </span>
+            <led-dimmer></led-dimmer>
+          </widget-layout>
+
+          <widget-layout key="_led_toggle" title="LED toggle">
+            <span class="widget-label" slot="header">
+              <iron-icon icon="icons:lightbulb-outline"></iron-icon>
+              [[_toString(toggle)]]
+            </span>
+            <led-toggle toggle="{{toggle}}"></led-toggle>
+          </widget-layout>
+
           <widget-layout key="_motion_control" title="Motion Control">
             <span class="widget-label" slot="header">
               <iron-icon icon="icons:assessment"></iron-icon>
@@ -131,7 +148,7 @@
             <motor-control></motor-control>
           </widget-layout>
 
-          <widget-layout key="_motor_control" title="Remote car control">
+          <widget-layout key="_basic_control" title="Remote control">
             <span class="widget-label" slot="header">
               <iron-icon icon="hardware:toys"></iron-icon>
             </span>
