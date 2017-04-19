@@ -10,7 +10,7 @@ MotorShieldDriver::MotorShieldDriver(bool enabled, unsigned int pinPWM, unsigned
 	pinMode(_pinPWM, OUTPUT);
 	pinMode(_pinDir, OUTPUT);
 
-  Log.verbose(F("Configuration for MotorShield done : pwm = %d, direction = %d" CR), pinPWM, pinDir);
+  Log.verbose(F("Configuration for motor shield done : pwm = %d, direction = %d" CR), pinPWM, pinDir);
 }
 
 int MotorShieldDriver::getSpeed() const {

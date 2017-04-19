@@ -6,7 +6,7 @@ class NotFoundHandler {
 
     NotFoundHandler() {};
 
-    void classRequest(AsyncWebServerRequest *request) {
+    void request(AsyncWebServerRequest *request) {
 
       String method = F("UNKNOWN");
       if (request->method() == HTTP_GET)

@@ -8,7 +8,7 @@ class WiFiScanHandler {
 
     WiFiScanHandler() {};
 
-    void classRequest(AsyncWebServerRequest *request) {
+    void request(AsyncWebServerRequest *request) {
 
       // WiFi scan isn't triggered = -2; https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/ESP8266WiFiScan.cpp
       if (WiFi.scanComplete() == -2) {

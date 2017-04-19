@@ -10,7 +10,7 @@ class FileListingHandler {
 
     FileListingHandler() {};
 
-    void classRequest(AsyncWebServerRequest *request) {
+    void request(AsyncWebServerRequest *request) {
 
       AsyncJsonResponse *response = new AsyncJsonResponse();
       JsonObject& json = response->getRoot();

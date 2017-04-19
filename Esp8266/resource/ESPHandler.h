@@ -14,7 +14,7 @@ class ESPHandler {
 
     ESPHandler() {};
 
-    void classRequest(AsyncWebServerRequest *request) {
+    void request(AsyncWebServerRequest *request) {
 
       // return data from https://github.com/esp8266/Arduino/blob/master/cores/esp8266/Esp.h
       AsyncJsonResponse *response = new AsyncJsonResponse();

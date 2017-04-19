@@ -6,6 +6,8 @@
 
 #include "Configuration.h"
 #include "WiFiService.h"
+#include "NTPService.h"
+#include "MQTTService.h"
 #include "WebService.h"
 
 class Esp8266 {
@@ -19,7 +21,8 @@ class Esp8266 {
 	private:
 
     WiFiService wiFiService;
-
+		NTPService ntpService;
+    MQTTService mqttService;
     WebService webService;
 
 		unsigned long previousTime = millis();
