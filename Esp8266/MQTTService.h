@@ -9,10 +9,16 @@ class MQTTService : public Service {
 
 	public:
 
-		MQTTService(bool enabled);
+		MQTTService();
 
     ~MQTTService();
-    
+
+    bool isRunning();
+
+    bool start();
+
+    bool stop();
+
     void publish(const char* topic, JsonObject& json);
 
   private:

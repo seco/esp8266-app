@@ -17,9 +17,15 @@
 
 class WebService : public Service {
 
-	public:
+  public:
 
-		WebService(bool enabled);
+    WebService();
+
+    bool isRunning();
+    
+    bool start();
+
+    bool stop();
 
   private:
 

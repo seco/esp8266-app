@@ -18,6 +18,6 @@ class Driver {
 		void setEnabled(bool enabled);
 
 	private:
-		// enables/disables this driver
+
 		bool _enabled = false;
-	};
+};

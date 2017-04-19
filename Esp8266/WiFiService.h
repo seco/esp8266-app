@@ -10,9 +10,19 @@ class WiFiService : public Service {
 
 	public:
 
-		WiFiService(bool enabled);
+    WiFiService();
 
-    bool reset();
+    ~WiFiService();
+
+    bool isRunning();
+
+    bool start();
+
+    bool stop();
+
+  protected:
+
+    bool resetAll();
 
     bool setupAP(char const *ssid, char const *passwd);
 

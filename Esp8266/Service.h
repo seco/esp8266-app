@@ -8,16 +8,13 @@
 class Service {
 
 	public:
-		// enabled: enables/disables this service
-		Service(bool enabled);
 
-		// use this method to know if this driver is enabled or not
-		bool isEnabled();
+		// returns if this service is running
+		virtual bool isRunning();
 
-		// enables/disables this driver
-		void setEnabled(bool enabled);
+		// starts this service and returns true if service is running
+		virtual bool start();
 
-	private:
-		// enables/disables this service
-		bool _enabled = false;
-	};
+    // stops this service and returns true if service is stopped
+    virtual bool stop();
+};

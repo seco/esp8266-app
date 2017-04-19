@@ -1,16 +1,19 @@
 #include "Esp8266.h"
 
-Esp8266::Esp8266() :
-  wiFiService(true),
-  ntpService(true),
-  mqttService(true),
-  webService(true) {
+Esp8266::Esp8266() {
+
+  wiFiService.start();
+  ntpService.start();
+  mqttService.start();
 
   if (SPIFFS.begin()) {
     Log.verbose(F("File system mounted." CR));
   } else {
     Log.warning(F("Couldn't mount file system." CR));
   }
+
+  webService.start();
+  
   Log.verbose(F("=========================" CR));
   Log.verbose(F("Setup finished. Have fun." CR));
   Log.verbose(F("=========================" CR));
@@ -21,7 +24,7 @@ void Esp8266::run() {
   if ((previousTime + updateInterval) < millis()) {
     previousTime = millis();
 
-    Log.notice(F("do something else here ..." CR));
+    Log.notice(F("do something else [here]" CR));
 
     // generate random values
     float celsius = float(random(200, 215)) / 10;

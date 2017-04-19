@@ -1,9 +1,19 @@
 #include "WiFiService.h"
 
-WiFiService::WiFiService(bool enabled) : Service(enabled) {
+WiFiService::WiFiService() {}
 
-	// reset former settings
-  reset();
+WiFiService::~WiFiService() {
+  stop();
+}
+
+bool WiFiService::isRunning() {
+  return true;
+}
+
+bool WiFiService::start() {
+  
+  // reset former WiFi settings
+  resetAll();
 
   // create access point (AP)
   #if (WIFI_MODE == WIFI_AP || WIFI_MODE == WIFI_AP_STA)
@@ -19,11 +29,17 @@ WiFiService::WiFiService(bool enabled) : Service(enabled) {
   #ifdef HOST_NAME
     setupMDNS();
   #endif
+  
+  return true;
 }
 
-bool WiFiService::reset() {
+bool WiFiService::stop() {
+  return true;
+}
 
-  // TODO have a deeper look at the WiFi reset procedure
+bool WiFiService::resetAll() {
+
+  // TODO have a deeper look into the WiFi settings
 
   // disconnect from any previous WiFi connect
   WiFi.softAPdisconnect();

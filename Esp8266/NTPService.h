@@ -9,7 +9,15 @@ class NTPService : public Service {
 
 	public:
 
-		NTPService(bool enabled);
+    NTPService();
+
+    ~NTPService();
+
+    bool isRunning();
+
+    bool start();
+
+    bool stop();
 
     NTPClient getNTPClient();
 
@@ -17,4 +25,6 @@ class NTPService : public Service {
 
     WiFiUDP ntpUDP;
     NTPClient ntpClient;
+
+    bool _running = false;
 };
