@@ -5,7 +5,8 @@
 #include <FS.h> // https://github.com/esp8266/Arduino/tree/master/cores/esp8266/FS.h
 
 #include "Configuration.h"
-#include "WiFiService.h"
+#include "WiFiAPService.h"
+#include "WiFiStaService.h"
 #include "NTPService.h"
 #include "MQTTService.h"
 #include "WebService.h"
@@ -20,7 +21,8 @@ class Esp8266 {
 
 	private:
 
-    WiFiService wiFiService;
+		WiFiAPService wiFiAPService;
+    WiFiStaService wiFiStaService;
 		NTPService ntpService;
     MQTTService mqttService;
     WebService webService;

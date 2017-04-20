@@ -17,9 +17,9 @@ bool NTPService::start() {
     ntpClient.begin();
     _running = ntpClient.forceUpdate();
     if (_running) {
-      Log.verbose(F("NTP connection successful established to [%s:%d]" CR), NTP_SERVER, NTP_DEFAULT_LOCAL_PORT);
+      Log.verbose(F("NTP established to [%s:%d]" CR), NTP_SERVER, NTP_DEFAULT_LOCAL_PORT);
     } else {
-      Log.error(F("NTP connection failed to [%s:%d]" CR), NTP_SERVER, NTP_DEFAULT_LOCAL_PORT);
+      Log.error(F("NTP failed for [%s:%d]" CR), NTP_SERVER, NTP_DEFAULT_LOCAL_PORT);
     }
   }
 

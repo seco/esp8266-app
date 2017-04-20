@@ -21,6 +21,8 @@ class WebService : public Service {
 
     WebService();
 
+    ~WebService();
+
     bool isRunning();
     
     bool start();
@@ -41,4 +43,6 @@ class WebService : public Service {
     FileListingHandler fileListingHandler;
     NotFoundHandler notFoundHandler;
     WiFiScanHandler wiFiScanHandler;
+
+    bool _running = false;
 };

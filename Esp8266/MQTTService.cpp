@@ -14,10 +14,26 @@ bool MQTTService::start() {
 
   if (!isRunning()) {
     // add mqtt callback handlers : https://github.com/marvinroger/async-mqtt-client/blob/master/docs/2.-API-reference.md
-    mqttClient.onConnect(onConnect);
-    mqttClient.onDisconnect(onDisconnect);
-    mqttClient.onPublish(onPublish);
-
+    mqttClient.onConnect([](bool sessionPresent) {
+      Log.verbose(F("Connected to MQTT broker [%s:%d]" CR), MQTT_SERVER, MQTT_PORT);
+    });   
+    mqttClient.onDisconnect([](AsyncMqttClientDisconnectReason reason) {
+      Log.verbose(F("Disconnected from MQTT broker [%s:%d]" CR), MQTT_SERVER, MQTT_PORT);
+      // TODO provide reasons
+    });
+    mqttClient.onPublish([](uint16_t packetId) {
+      Log.verbose("CALLBACK: Publish acknowledged with packetId: %d\n", packetId);
+    });
+    mqttClient.onSubscribe([](uint16_t packetId, uint8_t qos) {
+      Log.verbose("CALLBACK: Subscribe acknowledged with packetId: %d\n", packetId);
+    });
+    mqttClient.onUnsubscribe([](uint16_t packetId) {
+      Log.verbose("CALLBACK: Unsubscribe acknowledged with packetId: %d\n", packetId);
+    });
+    mqttClient.onMessage([](char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total) {
+      Log.verbose("CALLBACK: Message received\n");
+    });
+    
     // configure mqtt client
     mqttClient.setServer(MQTT_SERVER, MQTT_PORT);
     mqttClient.setCredentials(MQTT_USERNAME, MQTT_PASSWD);
@@ -26,13 +42,6 @@ bool MQTTService::start() {
     mqttClient.setCleanSession(true);
     // try to connect
     mqttClient.connect();
-    // wait a moment to establish a connection
-    delay(300);
-    if (isRunning()) {
-      Log.verbose(F("MQTT connection successful established to [%s:%d]" CR), MQTT_SERVER, MQTT_PORT);
-    } else {
-      Log.error(F("MQTT connection failed to [%s:%d]" CR), MQTT_SERVER, MQTT_PORT);
-    }
   }
   
   return isRunning();
@@ -56,39 +65,4 @@ void MQTTService::publish(const char* topic, JsonObject& json) {
 
   mqttClient.publish(topic, 0, true, payload, length);
   Log.verbose(F("Message send: %s" CR), payload);
-}
-
-/**
- * MQTT callback handlers
- */
-
-void MQTTService::onConnect(bool sessionPresent) {
-
-  Log.verbose("CALLBACK: Connection established to mqtt broker [%s:%d]\n", MQTT_SERVER, MQTT_PORT);
-}
-
-void MQTTService::onDisconnect(AsyncMqttClientDisconnectReason reason) {
-
-  Log.verbose("CALLBACK: Disonnected from mqtt broker [%s:%d]\n", MQTT_SERVER, MQTT_PORT);
-}
-
-void MQTTService::onPublish(uint16_t packetId) {
-
-  Log.verbose("CALLBACK: Publish acknowledged with packetId: %d\n", packetId);
-}
-
-void MQTTService::onSubscribe(uint16_t packetId, uint8_t qos) {
-
-  Log.verbose("CALLBACK: Subscribe acknowledged with packetId: %d\n", packetId);
-}
-
-void MQTTService::onUnsubscribe(uint16_t packetId) {
-
-  Log.verbose("CALLBACK: Unsubscribe acknowledged with packetId: %d\n", packetId);
-}
-
-void MQTTService::onMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total) {
-
-  // TODO add an expressive log message
-  Log.verbose("CALLBACK: Message received\n");
 }

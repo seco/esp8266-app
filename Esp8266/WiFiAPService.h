@@ -1,18 +1,23 @@
 #pragma once
 
 #include <ESP8266WiFi.h> // https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WiFi/src/ESP8266WiFi.h
-#include <ESP8266WiFiMulti.h> // https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi/src/ESP8266WiFiMulti.h
 #include <ESP8266mDNS.h> // https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266mDNS/ESP8266mDNS.h
+
+#ifdef ESP8266
+extern "C" {
+  #include "user_interface.h" // Expressif ESP8266 Non-OS API
+}
+#endif
 
 #include "Service.h"
 
-class WiFiService : public Service {
+class WiFiAPService : public Service {
 
 	public:
 
-    WiFiService();
+    WiFiAPService();
 
-    ~WiFiService();
+    ~WiFiAPService();
 
     bool isRunning();
 
@@ -20,17 +25,14 @@ class WiFiService : public Service {
 
     bool stop();
 
-  protected:
-
-    bool resetAll();
-
-    bool setupAP(char const *ssid, char const *passwd);
-
-    bool setupWiFi();
-
     bool setupMDNS();
+
+    /**
+     * returns number of connected stations
+     */
+    uint8_t getStationNumber();
 
   private:
 
-		ESP8266WiFiMulti wifiMulti;
+    WiFiEventHandler connectedEventHandler, disconnectedEventHandler;
 };
