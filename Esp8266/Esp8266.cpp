@@ -6,14 +6,14 @@ Esp8266::Esp8266() {
   wiFiStaService.start();
   ntpService.start();
   mqttService.start();
-
-  if (SPIFFS.begin()) {
-    Log.verbose(F("File system mounted." CR));
-  } else {
-    Log.warning(F("Couldn't mount file system." CR));
-  }
-
+  fsService.start();
   webService.start();
+
+  webService.on("/info", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/html", "<span>ESP8266 TEST</span>");
+  });
+
+  //webServer.on("/esp", HTTP_GET, std::bind(&ESPHandler::request, espHandler, std::placeholders::_1));
 
   Log.verbose(F("=========================" CR));
   Log.verbose(F("Setup finished. Have fun." CR));
@@ -25,7 +25,9 @@ void Esp8266::run() {
   if ((previousTime + updateInterval) < millis()) {
     previousTime = millis();
 
-    Log.notice(F("do something else [here]" CR));
+    if (wiFiAPService.isRunning()) {
+      Log.verbose(F("%d station(s) connected to soft-AP." CR), wiFiAPService.getStationNumber());
+    }
 
     if (mqttService.isRunning()) {
       // generate some random example values

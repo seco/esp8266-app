@@ -32,7 +32,14 @@ class WiFiAPService : public Service {
      */
     uint8_t getStationNumber();
 
+    /**
+     * returns current configuration of the ESP8266 WiFi soft-AP
+     */
+    softap_config* getConfig();
+
   private:
 
     WiFiEventHandler connectedEventHandler, disconnectedEventHandler;
+
+    bool _running = false;
 };

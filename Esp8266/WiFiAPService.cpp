@@ -7,10 +7,7 @@ WiFiAPService::~WiFiAPService() {
 }
 
 bool WiFiAPService::isRunning() {
-
-  // TODO
-
-  return false;
+  return _running;
 }
 
 bool WiFiAPService::start() {
@@ -33,6 +30,7 @@ bool WiFiAPService::start() {
     // try to establish a soft AP
     if (WiFi.softAP(WIFI_AP_SSID, WIFI_AP_PASSWD, WIFI_AP_CHANNEL, WIFI_AP_HIDDEN)) {
       Log.notice(F("Soft AP established successful. IP address of AP is: %s" CR), WiFi.softAPIP().toString().c_str());
+      _running = true;
     } else {
       Log.error(F("Couldn't establish a soft access point." CR));
     }
@@ -40,10 +38,6 @@ bool WiFiAPService::start() {
     #ifdef HOST_NAME
       setupMDNS();
     #endif
-
-    station_info* stationInfo = wifi_softap_get_station_info();
-
-
   }
 
   return isRunning();
@@ -53,6 +47,7 @@ bool WiFiAPService::stop() {
 
   if (isRunning()) {
     WiFi.softAPdisconnect();
+    _running = false;
   }
 
   return isRunning();
@@ -80,4 +75,17 @@ bool WiFiAPService::setupMDNS() {
 uint8_t WiFiAPService::getStationNumber() {
   return WiFi.softAPgetStationNum();
 }
+
+softap_config* WiFiAPService::getConfig() {
+
+  softap_config *config;
+  if (wifi_softap_get_config(config)) {
+    Log.verbose(F("Reading soft-AP configuration was successful." CR));
+  } else {
+    Log.verbose(F("Reading soft-AP configuration failed." CR));
+  }
+  
+  return config;
+}
+
 

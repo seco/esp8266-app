@@ -52,3 +52,19 @@ bool WebService::stop() {
 
   return isRunning();
 }
+
+AsyncCallbackWebHandler& WebService::on(const char* uri, ArRequestHandlerFunction onRequest) {
+  return webServer.on(uri, onRequest);
+}
+
+AsyncCallbackWebHandler& WebService::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest) {
+  return webServer.on(uri, method, onRequest);
+}
+
+AsyncCallbackWebHandler& WebService::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload) {
+  return webServer.on(uri, method, onRequest, onUpload);
+}
+
+AsyncCallbackWebHandler& WebService::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody) {
+  return webServer.on(uri, method, onRequest, onUpload, onBody);
+}

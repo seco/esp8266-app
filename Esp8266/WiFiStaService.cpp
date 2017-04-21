@@ -32,7 +32,7 @@ bool WiFiStaService::start() {
       Log.verbose(F("Station connected, IP: %s" CR), WiFi.localIP().toString().c_str());
     });
     */
-    
+
     // try to connect
     // TODO implement an "auto-detect" of all available WiFi credentials
     wifiMulti.addAP(WIFI_SSID_1, WIFI_PASSWD_1);
@@ -45,7 +45,7 @@ bool WiFiStaService::start() {
     }
     Serial.println();
     if (i > 20) {
-      Log.error(F("Couldn't connect to any WiFi. Please check your WiFi availability / accessibility and restart." CR));
+      Log.error(F("Couldn't connect to any WiFi AP. Please check your WiFi availability / accessibility and restart." CR));
     } else {
       Log.notice(F("WiFi successful connected. IP address is: %s" CR), WiFi.localIP().toString().c_str());
     }
