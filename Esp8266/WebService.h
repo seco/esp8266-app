@@ -10,11 +10,6 @@
 #include "MotorShieldHandler.h"
 #include "RemoteCarHandler.h"
 
-#include "resource/ESPHandler.h"
-#include "resource/FileListingHandler.h"
-#include "resource/NotFoundHandler.h"
-#include "resource/WiFiScanHandler.h"
-
 class WebService : public Service {
 
   public:
@@ -34,6 +29,10 @@ class WebService : public Service {
     AsyncCallbackWebHandler& on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload);
     AsyncCallbackWebHandler& on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody);
 
+    bool remove(AsyncWebHandler* handler);
+
+    ArRequestHandlerFunction notFoundFunction();
+
   private:
 
 		AsyncWebServer webServer;
@@ -43,11 +42,6 @@ class WebService : public Service {
 
     L298NHandler l298nHandler;
     RemoteCarHandler remoteCarHandler;
-
-    ESPHandler espHandler;
-    FileListingHandler fileListingHandler;
-    NotFoundHandler notFoundHandler;
-    WiFiScanHandler wiFiScanHandler;
-
+    
     bool _running = false;
 };

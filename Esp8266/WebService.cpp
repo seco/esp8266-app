@@ -29,12 +29,8 @@ bool WebService::start() {
     webServer.rewrite("/", DEFAULT_INDEX);
     // handle static web resources
     webServer.serveStatic("/", SPIFFS, "/www/", "max-age:600"); // cache-control 600 seconds
-    // handle dynamic web resources
-    webServer.on("/esp", HTTP_GET, std::bind(&ESPHandler::request, espHandler, std::placeholders::_1));
-    webServer.on("/list", HTTP_GET, std::bind(&FileListingHandler::request, fileListingHandler, std::placeholders::_1));
-    webServer.on("/scan", HTTP_GET, std::bind(&WiFiScanHandler::request, wiFiScanHandler, std::placeholders::_1));
     // handle 404
-    webServer.onNotFound(std::bind(&NotFoundHandler::request, notFoundHandler, std::placeholders::_1));
+    webServer.onNotFound(notFoundFunction());
     // start web server
     webServer.begin();
   }
@@ -68,3 +64,33 @@ AsyncCallbackWebHandler& WebService::on(const char* uri, WebRequestMethodComposi
 AsyncCallbackWebHandler& WebService::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody) {
   return webServer.on(uri, method, onRequest, onUpload, onBody);
 }
+
+bool WebService::remove(AsyncWebHandler* handler) {
+  return webServer.removeHandler(handler);
+}
+
+ArRequestHandlerFunction WebService::notFoundFunction() {
+  
+  return [](AsyncWebServerRequest *request) {
+    String method = F("UNKNOWN");
+    if (request->method() == HTTP_GET)
+      method = F("GET");
+    else if (request->method() == HTTP_POST)
+      method = F("POST");
+    else if (request->method() == HTTP_DELETE)
+      method = F("DELETE");
+    else if (request->method() == HTTP_PUT)
+      method = F("PUT");
+    else if (request->method() == HTTP_PATCH)
+      method = F("PATCH");
+    else if (request->method() == HTTP_HEAD)
+      method = F("HEAD");
+    else if (request->method() == HTTP_OPTIONS)
+      method = F("OPTIONS");
+    
+    Log.verbose(F("HTTP 404 : http://%s%s" CR), request->host().c_str(), request->url().c_str());
+
+    request->send(404, F("Page not found."));
+  };
+}
+

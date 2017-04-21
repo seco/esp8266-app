@@ -37,11 +37,13 @@ bool WiFiStaService::start() {
     // TODO implement an "auto-detect" of all available WiFi credentials
     wifiMulti.addAP(WIFI_SSID_1, WIFI_PASSWD_1);
     wifiMulti.addAP(WIFI_SSID_2, WIFI_PASSWD_2);
-    Serial.print("Trying to connect WiFi ");
+    Log.verbose("Trying to connect WiFi ");
     uint8_t i = 0;
     while (wifiMulti.run() != WL_CONNECTED && i++ < 20) { // try to connect at least 20 times
-      delay(300);
-      Serial.print(F("."));
+      delay(300); 
+      if (LOG_LEVEL == LOG_LEVEL_VERBOSE) {
+        Serial.print(F("."));
+      }
     }
     Serial.println();
     if (i > 20) {
