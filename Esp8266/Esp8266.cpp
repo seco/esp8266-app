@@ -23,7 +23,8 @@ bool Esp8266::start() {
     webService.start();
 
     espInfoHandler = &webService.on("/esp", HTTP_GET, getESPInfoFunction());
-    listHandler = &webService.on("/list", HTTP_GET, fsService.getListFunction());
+    infoHandler = &webService.on("/fs/info", HTTP_GET, fsService.getInfoFunction());
+    listHandler = &webService.on("/fs/list", HTTP_GET, fsService.getListFunction());
 
     _running = true;
 
@@ -46,6 +47,7 @@ bool Esp8266::stop() {
     wiFiAPService.stop();
 
     webService.remove(espInfoHandler);
+    webService.remove(infoHandler);
     webService.remove(listHandler);
     
     _running = false;

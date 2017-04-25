@@ -20,6 +20,8 @@ class FSService : public Service {
 
     bool stop();
 
+    ArRequestHandlerFunction getInfoFunction();
+
     ArRequestHandlerFunction getListFunction();
     
     static String formatBytes(size_t bytes);

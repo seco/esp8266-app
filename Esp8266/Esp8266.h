@@ -51,5 +51,6 @@ class Esp8266 : public Service {
 		unsigned int updateInterval = 5000;
 
     AsyncCallbackWebHandler* espInfoHandler;
+    AsyncCallbackWebHandler* infoHandler;
     AsyncCallbackWebHandler* listHandler;
 };

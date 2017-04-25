@@ -77,7 +77,8 @@
 
       connectedCallback() {
         super.connectedCallback();
-        this.url = 'ws://' + window.location.hostname + '/L298N';
+        //this.url = 'ws://' + window.location.hostname + '/L298N';
+        this.url = 'ws://esp8266.local/L298N';
       }
 
       _setSpeed(speed) {

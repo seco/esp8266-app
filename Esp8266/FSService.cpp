@@ -34,6 +34,28 @@ bool FSService::stop() {
   return isRunning();
 }
 
+ArRequestHandlerFunction FSService::getInfoFunction() {
+
+    return [](AsyncWebServerRequest *request) {
+
+    AsyncJsonResponse *response = new AsyncJsonResponse();
+    JsonObject& json = response->getRoot();
+
+    FSInfo fs_info;
+    SPIFFS.info(fs_info);
+
+    json[F("totalBytes")] = fs_info.totalBytes;
+    json[F("usedBytes")] = fs_info.usedBytes;
+    json[F("blockSize")] = fs_info.blockSize;
+    json[F("pageSize")] = fs_info.pageSize;
+    json[F("maxOpenFiles")] = fs_info.maxOpenFiles;
+    json[F("maxPathLength")] = fs_info.maxPathLength;
+
+    response->setLength();
+    request->send(response);
+  };
+}
+
 ArRequestHandlerFunction FSService::getListFunction() {
   
   return [](AsyncWebServerRequest *request) {
